@@ -14,7 +14,22 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
+			isDraft: z.boolean().default(false),
+			isFeatured: z.boolean().default(false),
+			tags: z.array(z.string()).optional(),
 		}),
 });
 
-export const collections = { blog };
+const about = defineCollection({
+	loader: glob({ base: './src/content', pattern: 'about.{md,mdx}' }),
+	schema: ({ image }) =>
+		z.object({
+			title: z.string(),
+			description: z.string(),
+			pubDate: z.coerce.date(),
+			updatedDate: z.coerce.date().optional(),
+			heroImage: z.optional(image())
+		}),
+});
+
+export const collections = { blog, about };

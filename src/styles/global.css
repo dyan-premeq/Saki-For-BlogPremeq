@@ -4,6 +4,12 @@
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
+@import "tailwindcss";
+
+@theme inline {
+	--font-code-block: "JetBrains Mono", var(--font-cascadia-code), monospace;
+}
+
 :root {
 	--accent: #2337ff;
 	--accent-dark: #000d8a;
@@ -28,6 +34,9 @@ body {
 	color: rgb(var(--gray-dark));
 	font-size: 20px;
 	line-height: 1.7;
+}
+body:not(.saki-home) {
+	padding-top: 72px;
 }
 main {
 	width: 720px;
@@ -92,16 +101,145 @@ img {
 	border-radius: 8px;
 }
 code {
-	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
-	border-radius: 2px;
+	@apply rounded-md px-1.5 py-0.5 font-code-block text-[0.9em] break-words;
+	background: color-mix(in srgb, #fe9600 10%, transparent);
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, #fe9600 16%, transparent);
+	color: rgb(var(--gray-dark));
 }
 pre {
-	padding: 1.5em;
-	border-radius: 8px;
+	@apply my-8 rounded-xl border text-sm leading-6 shadow-sm outline-offset-2;
+	border-color: color-mix(in srgb, #fe9600 22%, transparent);
+	background: #f8f8f8;
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 1.25rem 1.35rem;
+}
+pre:focus-visible {
+	outline: 2px dashed #fe9600;
 }
 pre > code {
 	all: unset;
+	display: grid;
+	min-width: 100%;
+	overflow: visible;
+	font-family: var(--font-code-block);
+	scrollbar-color: color-mix(in srgb, #fe9600 48%, transparent) transparent;
+}
+.code-block-frame {
+	@apply relative my-8;
+}
+.code-block-frame > pre {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.astro-code,
+.astro-code code {
+	@apply font-code-block;
+}
+.astro-code {
+	@apply flex;
+	background: var(--shiki-light-bg);
+	color: var(--shiki-light);
+	position: relative;
+	z-index: 2;
+}
+.astro-code span {
+	color: var(--shiki-light);
+}
+.astro-code > code {
+	@apply grid min-w-full bg-inherit p-0;
+	overflow: visible;
+}
+.astro-code .line {
+	@apply inline-block min-w-full;
+}
+.astro-code .line.diff.add {
+	@apply relative inline-block min-w-full bg-green-400/20;
+}
+.astro-code .line.diff.add::before {
+	@apply absolute text-green-600;
+	left: -0.95rem;
+	content: '+';
+}
+.astro-code .line.diff.remove {
+	@apply relative inline-block min-w-full bg-red-500/15;
+}
+.astro-code .line.diff.remove::before {
+	@apply absolute text-red-500;
+	left: -0.95rem;
+	content: '-';
+}
+.astro-code .line.highlighted {
+	@apply inline-block min-w-full bg-slate-400/20;
+}
+.astro-code .highlighted-word {
+	@apply rounded-sm px-0.5 py-px;
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, #fe9600 30%, transparent);
+}
+.code-block-frame.has-code-file {
+	margin-top: 2.25rem;
+}
+.astro-code.has-code-file-v1 {
+	border-top-left-radius: 0;
+}
+.code-file-label {
+	@apply absolute z-10 inline-flex items-center rounded-md border px-2 py-1 font-code-block text-xs font-medium leading-4;
+	top: var(--file-name-offset, -0.75rem);
+	left: 0.75rem;
+	border-color: color-mix(in srgb, #fe9600 26%, transparent);
+	background: color-mix(in srgb, white 92%, #fe9600 8%);
+	box-shadow: 0 8px 24px color-mix(in srgb, #fe9600 13%, transparent);
+	color: rgb(var(--gray-dark));
+}
+.code-file-label--v1 {
+	top: -1.55rem;
+	left: 0;
+	border-bottom: 0;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+.code-file-label--dot {
+	padding-left: 1rem;
+}
+.code-file-label--dot::before {
+	@apply absolute rounded-full bg-green-500;
+	top: 50%;
+	left: 0.45rem;
+	width: 0.3rem;
+	height: 0.3rem;
+	content: '';
+	transform: translateY(-50%);
+}
+.copy-code {
+	@apply absolute end-3 rounded-md border px-2 py-1 font-code-block text-xs font-medium leading-4 transition;
+	z-index: 30;
+	top: -0.75rem;
+	border-color: color-mix(in srgb, #fe9600 24%, transparent);
+	background: color-mix(in srgb, white 92%, #fe9600 8%);
+	color: rgb(var(--gray-dark));
+}
+.copy-code:hover,
+.copy-code:focus-visible {
+	border-color: color-mix(in srgb, #fe9600 52%, transparent);
+	background: color-mix(in srgb, white 82%, #fe9600 18%);
+}
+.code-block-frame.has-code-file .copy-code {
+	top: var(--file-name-offset, -0.75rem);
+}
+@media (prefers-color-scheme: dark) {
+	.astro-code {
+		border-color: color-mix(in srgb, #fe9600 32%, transparent);
+		background: var(--shiki-dark-bg);
+		color: var(--shiki-dark);
+	}
+	.astro-code span {
+		color: var(--shiki-dark);
+	}
+	.code-file-label,
+	.copy-code {
+		background: color-mix(in srgb, #141414 86%, #fe9600 14%);
+		color: #f5f5f5;
+	}
 }
 blockquote {
 	border-left: 4px solid var(--accent);
@@ -116,6 +254,9 @@ hr {
 @media (max-width: 720px) {
 	body {
 		font-size: 18px;
+	}
+	body:not(.saki-home) {
+		padding-top: 64px;
 	}
 	main {
 		padding: 1em;

@@ -1,49 +1,757 @@
 ---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import HeroFallback from '../assets/blog-placeholder-5.jpg';
+import FeatureFallbackOne from '../assets/blog-placeholder-1.jpg';
+import FeatureFallbackTwo from '../assets/blog-placeholder-2.jpg';
+import FeatureFallbackThree from '../assets/blog-placeholder-4.jpg';
+import HomeHeroImage from '../assets/home-hero.png';
+import { SITE } from '../site_config';
+
+const posts = (await getCollection('blog')).filter((post) => !post.data.isDraft).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const fallbackImages = [FeatureFallbackOne, FeatureFallbackTwo, FeatureFallbackThree];
+const heroPost = posts[0];
+const heroImage = HomeHeroImage ?? heroPost?.data.heroImage ?? HeroFallback;
+const heroHref = heroPost ? `/blog/${heroPost.id}/` : '/blog/';
+
+const featureCards = posts
+	.filter((post) => post.data.isFeatured)
+	.slice(0, 3)
+	.map((post, index) => ({
+		title: post.data.title,
+		description: post.data.description,
+		href: `/blog/${post.id}/`,
+		image: post.data.heroImage ?? fallbackImages[index % fallbackImages.length],
+		label: index === 0 ? 'Focus' : `0${index + 1}`,
+	}));
+
+const discoveryCards = posts.slice(0, 5).map((post, index) => ({
+	title: post.data.title,
+	description: post.data.description,
+	href: `/blog/${post.id}/`,
+	image: post.data.heroImage ?? fallbackImages[index % fallbackImages.length],
+	date: post.data.pubDate,
+	index,
+}));
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={SITE.title} description={SITE.description} />
 	</head>
-	<body>
+	<body class="saki-home">
 		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+		<main class="sakura-home">
+			<section class="home-hero" aria-labelledby="hero-title">
+				<div class="hero-media" aria-hidden="true">
+					<Image src={heroImage} alt="" width={1800} height={1000} loading="eager" />
+				</div>
+				<div class="hero-shade" aria-hidden="true"></div>
+				<div class="hero-grid" aria-hidden="true"></div>
+				<div class="hero-wash" aria-hidden="true"></div>
+
+				<div class="hero-inner">
+					<h1 id="hero-title">{SITE.themeTitle}</h1>
+					<p class="hero-copy">{SITE.description}</p>
+				</div>
+
+				<a class="hero-latest" href={heroHref}>
+					<span>Latest</span>
+					<strong>{heroPost?.data.title ?? 'Start reading'}</strong>
+				</a>
+			</section>
+
+			<div class="home-content">
+				<section class="notice" aria-label="Site notice">
+					<span class="notice-mark" aria-hidden="true">*</span>
+					<p>
+						A homepage sketch inspired by Sakura.
+					</p>
+				</section>
+
+				<section class="feature-section" aria-labelledby="feature-title">
+					<div class="section-heading">
+						<p>Top Feature</p>
+						<h2 id="feature-title">Focus</h2>
+					</div>
+					<div class="feature-grid">
+						{
+							featureCards.map((item) => (
+								<a class="feature-card" href={item.href}>
+									<Image src={item.image} alt="" width={640} height={400} />
+									<span class="feature-label">{item.label}</span>
+									<span class="feature-title">
+										<strong>{item.title}</strong>
+										<small>{item.description}</small>
+									</span>
+								</a>
+							))
+						}
+					</div>
+				</section>
+
+				<section class="discovery-section" aria-labelledby="discovery-title">
+					<div class="section-heading discovery-heading">
+						<p>Discovery</p>
+						<h2 id="discovery-title">Recent Articles</h2>
+					</div>
+					<div class="post-flow">
+						{
+							discoveryCards.map((post) => (
+								<article class="post-row" style={`--delay: ${post.index * 80}ms`}>
+									<div class="post-copy">
+										<p class="post-date">
+											<FormattedDate date={post.date} />
+										</p>
+										<a class="post-title" href={post.href}>{post.title}</a>
+										<p class="post-description">{post.description}</p>
+										<a class="post-more" href={post.href} aria-label={`Read ${post.title}`}>Read more</a>
+									</div>
+									<a class="post-thumb" href={post.href} aria-label={post.title}>
+										<Image src={post.image} alt="" width={860} height={520} />
+									</a>
+								</article>
+							))
+						}
+					</div>
+				</section>
+			</div>
 		</main>
 		<Footer />
+		<script>
+			const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			const home = document.querySelector('.sakura-home');
+			const hero = document.querySelector('.home-hero');
+			const postRows = document.querySelectorAll('.post-row');
+			const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+			if (home instanceof HTMLElement && hero instanceof HTMLElement && !prefersReducedMotion) {
+				let ticking = false;
+
+				const updateCover = () => {
+					const distance = Math.max(hero.offsetHeight * 0.72, 1);
+					const progress = clamp(window.scrollY / distance, 0, 1);
+					const eased = 1 - Math.pow(1 - progress, 3);
+
+					home.style.setProperty('--cover-fade', (eased * 0.64).toFixed(3));
+					home.style.setProperty('--hero-blur', `${(eased * 10).toFixed(2)}px`);
+					home.style.setProperty('--hero-scale', (1.03).toFixed(4));
+					home.style.setProperty('--hero-shade-opacity', Math.max(0.36, 1 - eased * 0.58).toFixed(3));
+					home.style.setProperty('--hero-grid-opacity', Math.max(0.06, 0.32 - eased * 0.24).toFixed(3));
+					home.style.setProperty('--hero-content-opacity', Math.max(0, 1 - progress * 1.45).toFixed(3));
+					home.style.setProperty('--hero-copy-y', `${(-progress * 46).toFixed(1)}px`);
+					home.style.setProperty('--content-lift', `${(-eased * 104).toFixed(1)}px`);
+				};
+
+				const requestCoverUpdate = () => {
+					if (ticking) return;
+
+					ticking = true;
+					window.requestAnimationFrame(() => {
+						updateCover();
+						ticking = false;
+					});
+				};
+
+				updateCover();
+				window.addEventListener('scroll', requestCoverUpdate, { passive: true });
+				window.addEventListener('resize', requestCoverUpdate);
+			}
+
+			if ('IntersectionObserver' in window && postRows.length > 0 && !prefersReducedMotion) {
+				document.documentElement.classList.add('js-reveal');
+
+				const observer = new IntersectionObserver(
+					(entries) => {
+						entries.forEach((entry) => {
+							if (entry.isIntersecting) {
+								entry.target.classList.add('is-visible');
+								observer.unobserve(entry.target);
+							}
+						});
+					},
+					{
+						rootMargin: '0px 0px -10% 0px',
+						threshold: 0.22,
+					},
+				);
+
+				postRows.forEach((row) => observer.observe(row));
+			}
+		</script>
 	</body>
 </html>
+
+<style>
+	:global(body.saki-home) {
+		--background: 255 255 255;
+		background: rgb(var(--background));
+		color: #353535;
+	}
+
+	.sakura-home {
+		--content-lift: 0px;
+		--cover-fade: 0;
+		--hero-blur: 0px;
+		--hero-content-opacity: 1;
+		--hero-copy-y: 0px;
+		--hero-grid-opacity: 0.32;
+		--hero-scale: 1.03;
+		--hero-shade-opacity: 1;
+		background: rgb(var(--background));
+		width: 100%;
+		max-width: none;
+		margin: 0;
+		padding: 0 0 72px;
+	}
+
+	.home-hero {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		isolation: isolate;
+		display: grid;
+		height: 100vh;
+		height: 100svh;
+		min-height: 620px;
+		place-items: center;
+		overflow: hidden;
+		background: #101014;
+	}
+
+	.hero-media,
+	.hero-shade,
+	.hero-grid,
+	.hero-wash {
+		position: absolute;
+		inset: 0;
+	}
+
+	.hero-media {
+		z-index: -3;
+	}
+
+	.hero-media :global(img) {
+		width: 100%;
+		height: 100%;
+		border-radius: 0;
+		filter: saturate(0.86) contrast(1.08) blur(var(--hero-blur));
+		object-fit: cover;
+		object-position: center top;
+		transform: scale(var(--hero-scale));
+		will-change: filter, transform;
+	}
+
+	.hero-shade {
+		z-index: -2;
+		background:
+			radial-gradient(circle at 52% 46%, rgba(254, 150, 0, 0.2), transparent 30%),
+			linear-gradient(180deg, rgba(10, 10, 14, 0.25), rgba(10, 10, 14, 0.76));
+		opacity: var(--hero-shade-opacity);
+	}
+
+	.hero-grid {
+		z-index: -1;
+		background-image:
+			linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+		background-size: 44px 44px;
+		mask-image: linear-gradient(180deg, transparent, #000 22%, #000 72%, transparent);
+		opacity: var(--hero-grid-opacity);
+	}
+
+	.hero-wash {
+		z-index: 1;
+		background: rgb(var(--background) / var(--cover-fade));
+		pointer-events: none;
+	}
+
+	.hero-inner {
+		position: relative;
+		z-index: 2;
+		width: min(860px, calc(100% - 32px));
+		padding-top: 48px;
+		text-align: center;
+		color: #fff;
+		opacity: var(--hero-content-opacity);
+		text-shadow: 0 16px 40px rgba(0, 0, 0, 0.36);
+		transform: translateY(var(--hero-copy-y));
+		will-change: opacity, transform;
+	}
+
+	.hero-kicker {
+		margin: 0 0 18px;
+		color: rgba(255, 255, 255, 0.74);
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: 0.32em;
+		text-transform: uppercase;
+	}
+
+	.hero-inner h1 {
+		margin: 0;
+		color: #fff;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(4.1rem, 13vw, 9.5rem);
+		font-weight: 400;
+		letter-spacing: -0.08em;
+		line-height: 0.82;
+	}
+
+	.hero-copy {
+		max-width: 640px;
+		margin: 28px auto 0;
+		color: rgba(255, 255, 255, 0.82);
+		font-size: clamp(1rem, 2vw, 1.25rem);
+		line-height: 1.8;
+	}
+
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 12px;
+		margin-top: 34px;
+	}
+
+	.hero-actions a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 42px;
+		padding: 0 22px;
+		clip-path: polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 11px 100%, 0 calc(100% - 11px));
+		font-size: 13px;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-decoration: none;
+		text-transform: uppercase;
+		transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+	}
+
+	.hero-actions a:hover {
+		transform: translateY(-2px);
+	}
+
+	.primary-action {
+		background: #fe9600;
+		color: #1f1305;
+	}
+
+	.ghost-action {
+		border: 1px solid rgba(255, 255, 255, 0.5);
+		color: #fff;
+	}
+
+	.hero-latest {
+		position: absolute;
+		right: clamp(18px, 5vw, 84px);
+		bottom: 64px;
+		z-index: 2;
+		max-width: 280px;
+		padding-left: 18px;
+		border-left: 2px solid #fe9600;
+		color: #fff;
+		opacity: var(--hero-content-opacity);
+		text-decoration: none;
+		text-align: left;
+		transform: translateY(var(--hero-copy-y));
+		will-change: opacity, transform;
+	}
+
+	.home-content {
+		position: relative;
+		z-index: 10;
+		margin-top: 0;
+		padding-top: 54px;
+		background-color: rgb(var(--background));
+		background-image: repeating-linear-gradient(90deg, rgba(254, 150, 0, 0.035) 0 1px, transparent 1px 96px);
+		transform: translate3d(0, var(--content-lift), 0);
+		will-change: transform;
+	}
+
+	.hero-latest span {
+		display: block;
+		margin-bottom: 5px;
+		color: rgba(255, 255, 255, 0.64);
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+	}
+
+	.hero-latest strong {
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 1.45;
+	}
+
+	.notice,
+	.feature-section,
+	.discovery-section {
+		width: min(960px, calc(100% - 36px));
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.notice {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		margin-top: 0;
+		padding: 18px 20px;
+		border: 1px dashed rgba(40, 40, 40, 0.18);
+		background: rgba(255, 255, 255, 0.72);
+		color: rgba(30, 30, 30, 0.65);
+		font-size: 15px;
+		line-height: 1.7;
+	}
+
+	.notice p {
+		margin: 0;
+	}
+
+	.notice-mark {
+		color: #fe9600;
+		font-size: 28px;
+		line-height: 1;
+	}
+
+	.feature-section {
+		margin-top: 54px;
+	}
+
+	.section-heading {
+		margin-bottom: 20px;
+		text-align: center;
+	}
+
+	.section-heading p {
+		margin: 0 0 4px;
+		color: #fe9600;
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+	}
+
+	.section-heading h2 {
+		margin: 0;
+		color: #303030;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(2rem, 5vw, 3.6rem);
+		font-weight: 400;
+		letter-spacing: -0.05em;
+	}
+
+	.feature-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 8px;
+	}
+
+	.feature-card {
+		position: relative;
+		display: block;
+		height: 178px;
+		overflow: hidden;
+		background: #111;
+		color: #fff;
+		text-decoration: none;
+	}
+
+	.feature-card::after {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(90deg, rgba(4, 8, 14, 0.72), rgba(4, 8, 14, 0.12), rgba(4, 8, 14, 0.62));
+		content: '';
+		opacity: 0.78;
+		transition: opacity 0.25s ease;
+	}
+
+	.feature-card:hover::after {
+		opacity: 0.94;
+	}
+
+	.feature-card :global(img) {
+		width: 100%;
+		height: 100%;
+		border-radius: 0;
+		object-fit: cover;
+		transition: transform 0.55s ease;
+	}
+
+	.feature-card:hover :global(img) {
+		transform: scale(1.08);
+	}
+
+	.feature-label,
+	.feature-title {
+		position: absolute;
+		z-index: 2;
+	}
+
+	.feature-label {
+		top: 16px;
+		left: 16px;
+		color: rgba(255, 255, 255, 0.68);
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+	}
+
+	.feature-title {
+		right: 18px;
+		bottom: 18px;
+		left: 18px;
+		transform: translateY(34px);
+		transition: transform 0.28s ease;
+	}
+
+	.feature-card:hover .feature-title {
+		transform: translateY(0);
+	}
+
+	.feature-title strong,
+	.feature-title small {
+		display: block;
+	}
+
+	.feature-title strong {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: 18px;
+		font-weight: 500;
+	}
+
+	.feature-title small {
+		display: -webkit-box;
+		overflow: hidden;
+		margin-top: 8px;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		color: rgba(255, 255, 255, 0.72);
+		font-size: 12px;
+		line-height: 1.5;
+	}
+
+	.discovery-section {
+		margin-top: 74px;
+	}
+
+	.discovery-heading {
+		text-align: left;
+	}
+
+	.post-flow {
+		display: grid;
+		gap: 28px;
+	}
+
+	.post-row {
+		display: grid;
+		grid-template-columns: minmax(0, 0.86fr) minmax(320px, 1.14fr);
+		min-height: 290px;
+		overflow: hidden;
+		border: 1px solid rgba(20, 20, 20, 0.08);
+		background: rgba(255, 255, 255, 0.78);
+		box-shadow: 0 18px 50px -42px rgba(0, 0, 0, 0.75);
+		opacity: 1;
+		transform: translateY(0);
+		transition:
+			opacity 0.68s cubic-bezier(0.22, 1, 0.36, 1),
+			transform 0.68s cubic-bezier(0.22, 1, 0.36, 1),
+			box-shadow 0.25s ease;
+		transition-delay: 0ms, 0ms, 0ms;
+	}
+
+	.post-row:nth-child(even) {
+		grid-template-columns: minmax(320px, 1.14fr) minmax(0, 0.86fr);
+	}
+
+	.post-row:nth-child(even) .post-thumb {
+		order: -1;
+	}
+
+	:global(.js-reveal) .post-row {
+		opacity: 0;
+		transform: translateY(72px);
+		will-change: opacity, transform;
+	}
+
+	:global(.js-reveal) .post-row.is-visible {
+		opacity: 1;
+		transform: translateY(0);
+		transition-delay: var(--delay), var(--delay), 0ms;
+	}
+
+	.post-copy {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 30px clamp(22px, 5vw, 42px);
+	}
+
+	.post-date {
+		margin: 0 0 12px;
+		color: #888;
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+
+	.post-title {
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		color: #383838;
+		font-size: clamp(1.45rem, 3vw, 2.1rem);
+		font-weight: 700;
+		line-height: 1.16;
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	.post-title:hover {
+		color: #fe9600;
+	}
+
+	.post-description {
+		display: -webkit-box;
+		overflow: hidden;
+		margin: 18px 0 0;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		color: rgba(0, 0, 0, 0.58);
+		font-size: 15px;
+		line-height: 1.8;
+	}
+
+	.post-more {
+		align-self: flex-start;
+		margin-top: 24px;
+		padding-bottom: 4px;
+		border-bottom: 2px solid #fe9600;
+		color: #444;
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: 0.16em;
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+
+	.post-thumb {
+		display: block;
+		overflow: hidden;
+		background: #111;
+	}
+
+	.post-thumb :global(img) {
+		width: 100%;
+		height: 100%;
+		min-height: 290px;
+		border-radius: 0;
+		object-fit: cover;
+		transition: transform 0.55s ease, filter 0.55s ease;
+	}
+
+	.post-row:hover .post-thumb :global(img) {
+		filter: saturate(1.04);
+		transform: scale(1.06);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.home-content,
+		.hero-inner,
+		.hero-latest,
+		.hero-media :global(img),
+		.post-row,
+		.post-thumb :global(img),
+		.feature-card :global(img),
+		.feature-title {
+			transition: none;
+		}
+	}
+
+	@media (max-width: 860px) {
+		.home-hero {
+			height: 100vh;
+			height: 100svh;
+			min-height: 520px;
+		}
+
+		.hero-inner {
+			padding-top: 72px;
+		}
+
+		.hero-latest {
+			display: none;
+		}
+
+		.notice,
+		.feature-section,
+		.discovery-section {
+			width: min(100% - 28px, 720px);
+		}
+
+		.feature-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.feature-card {
+			height: 210px;
+		}
+
+		.post-row {
+			grid-template-columns: 1fr;
+			min-height: 0;
+			box-shadow: none;
+		}
+
+		.post-row:nth-child(even) {
+			grid-template-columns: 1fr;
+		}
+
+		.post-thumb {
+			order: -1;
+		}
+
+		.post-thumb :global(img) {
+			min-height: 210px;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.hero-inner h1 {
+			font-size: clamp(3.4rem, 21vw, 5.4rem);
+		}
+
+		.hero-copy {
+			font-size: 0.98rem;
+		}
+
+		.hero-actions a {
+			width: 100%;
+			justify-content: center;
+		}
+
+		.notice {
+			align-items: flex-start;
+		}
+	}
+</style>
