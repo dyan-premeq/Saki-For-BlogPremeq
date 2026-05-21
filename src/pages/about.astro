@@ -1,6 +1,6 @@
 ---
 import { getEntry, render } from 'astro:content';
-import BlogPost from '../layouts/BlogPost.astro';
+import AboutPage from '../layouts/AboutPage.astro';
 
 const about = await getEntry('about', 'about');
 
@@ -11,6 +11,6 @@ if (!about) {
 const { Content } = await render(about);
 ---
 
-<BlogPost {...about.data}>
+<AboutPage {...about.data}>
 	<Content />
-</BlogPost>
+</AboutPage>

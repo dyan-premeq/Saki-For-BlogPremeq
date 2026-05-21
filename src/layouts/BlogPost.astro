@@ -6,85 +6,51 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 
-type Props = CollectionEntry<'blog'>['data'] | CollectionEntry<'about'>['data'];
+type Props = CollectionEntry<'blog'>['data'];
 
-const {
-	title,
-	description,
-	pubDate,
-	updatedDate,
-	heroImage
-} = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
+<!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				position: relative;
-				z-index: 1;
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
 	</head>
 
 	<body>
 		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+		<main class="!m-0 !w-[calc(100%_-_2em)] !max-w-full !p-0">
+			<article class="pb-16">
+				<div class="w-full">
+					{
+						heroImage && (
+							<Image
+								width={1020}
+								height={510}
+								src={heroImage}
+								alt=""
+								class="mx-auto block !rounded-xl shadow-[var(--box-shadow)]"
+							/>
+						)
+					}
 				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
+				<div
+					class="prose relative z-[1] mx-auto w-[720px] max-w-[calc(100%_-_2em)] p-4 text-[rgb(var(--gray-dark))]"
+				>
+					<header class="mb-4 py-4 text-center leading-none">
+						<div class="mb-2 text-[rgb(var(--gray))]">
 							<FormattedDate date={pubDate} />
 							{
 								updatedDate && (
-									<div class="last-updated-on">
+									<div class="italic">
 										Last updated on <FormattedDate date={updatedDate} />
 									</div>
 								)
 							}
 						</div>
-						<h1>{title}</h1>
+						<h1 class="!mb-2 !text-[3.052em]">{title}</h1>
 						<hr />
-					</div>
+					</header>
 					<slot />
 				</div>
 			</article>
