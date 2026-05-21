@@ -35,7 +35,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 					}
 				</div>
 				<div
-					class="prose relative z-[1] mx-auto w-[720px] max-w-[calc(100%_-_2em)] p-4 text-[rgb(var(--gray-dark))]"
+					class="prose relative z-[1] mx-auto max-w-[calc(100%_-_2em)] p-4"
 				>
 					<header class="mb-4 py-4 text-center leading-none">
 						<div class="mb-2 text-[rgb(var(--gray))]">
@@ -56,5 +56,8 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			</article>
 		</main>
 		<Footer />
+		<script>
+			import '../scripts/typography';
+		</script>
 	</body>
 </html>
