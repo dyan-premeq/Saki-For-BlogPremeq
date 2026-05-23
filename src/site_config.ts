@@ -3,9 +3,9 @@
 
 export const SITE = {
     website: "https://dyan.premequre.space/",
-    description: 'Journal theme inspired by Sakura.',
+    description: '山城海路，终有一逢。',
     title: 'Premequre',
-    themeTitle: 'Saki',
+    themeTitle: '',
     author: 'dyan',
     profile: 'https://github.com/dyan-premeq',
     avatar: {

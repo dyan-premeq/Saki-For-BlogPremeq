@@ -13,7 +13,7 @@ import { transformerFileName } from './src/utils/transformers/fileName';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
+	site: 'https://dyan.premequre.space/',
 	integrations: [mdx(), sitemap()],
 	markdown: {
 		rehypePlugins: [rehypeCodeBlockFrame, rehypeMarkdownFootnotes],
