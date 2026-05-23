@@ -24,16 +24,19 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				<div class="w-full">
 					{
 						heroImage && (
-							<Image
-								width={1020}
-								height={510}
-								src={heroImage}
-								alt=""
-								class="mx-auto block !rounded-xl shadow-[var(--box-shadow)]"
-							/>
+							<div class="mx-auto aspect-[16/9] w-full max-w-[1020px] overflow-hidden shadow-[var(--box-shadow)]">
+								<Image
+									width={1024}
+									height={576}
+									src={heroImage}
+									alt=""
+									class="block h-full w-full rounded-none object-cover"
+								/>
+							</div>
 						)
 					}
 				</div>
+
 				<div
 					class="prose relative z-[1] mx-auto max-w-[calc(100%_-_2em)] p-4"
 				>
@@ -50,6 +53,16 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						</div>
 						<h1 class="!mb-2 !text-[3.052em]">{title}</h1>
 						<hr />
+						{
+							description && (
+								<aside
+									class="post-description-note mx-auto mt-8 max-w-[calc(100%_-_2em)] px-5 py-4 text-left sm:max-w-[720px] sm:px-6 sm:py-5"
+									aria-label="Post description"
+								>
+									<p class="m-0">{description}</p>
+								</aside>
+							)
+						}
 					</header>
 					<slot />
 				</div>
@@ -61,3 +74,20 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		</script>
 	</body>
 </html>
+
+<style>
+	.post-description-note {
+		border-left: 4px solid #fe9600;
+		background: linear-gradient(90deg, color-mix(in srgb, #fe9600 10%, transparent), transparent 72%);
+		color: color-mix(in srgb, rgb(var(--gray-dark)) 84%, #7b4a2a);
+		font-family: var(--font-markdown-quote);
+		font-size: 1.05em;
+		font-size-adjust: 0.45;
+		font-style: normal;
+		line-height: 1.75;
+	}
+
+	.post-description-note p {
+		margin: 0;
+	}
+</style>

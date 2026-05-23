@@ -14,5 +14,6 @@ export const SITE = {
     },
     dir: "ltr", // "rtl" | "auto"
     lang: "zh-CN", // HTML lang code. Set this empty and default will be "en"
-    timezone: "Asia/Shanghai"
+    timezone: "Asia/Shanghai",
+    notice: "哦哦，哦哦哦！这里是公告。"
 } as const;

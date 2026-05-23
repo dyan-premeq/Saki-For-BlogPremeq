@@ -73,7 +73,7 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 				<section class="notice" aria-label="Site notice">
 					<span class="notice-mark" aria-hidden="true">*</span>
 					<p>
-						哦哦，哦哦哦！
+						{SITE.notice}
 					</p>
 				</section>
 
@@ -108,11 +108,11 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 							discoveryCards.map((post) => (
 								<article class="post-row" style={`--delay: ${post.index * 80}ms`}>
 									<div class="post-copy">
-										<p class="post-date">
+										<p class="post-date font-markdown-footnote">
 											<FormattedDate date={post.date} />
 										</p>
-										<a class="post-title" href={post.href}>{post.title}</a>
-										<p class="post-description">{post.description}</p>
+										<a class="post-title font-markdown-heading" href={post.href}>{post.title}</a>
+										<p class="post-description font-markdown-body">{post.description}</p>
 										<a class="post-more" href={post.href} aria-label={`Read ${post.title}`}>Read more</a>
 									</div>
 									<a class="post-thumb" href={post.href} aria-label={post.title}>
@@ -121,6 +121,7 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 								</article>
 							))
 						}
+						<a class="archive-more" href="/post/" aria-label="View blog archive">&gt;</a>
 					</div>
 				</section>
 			</div>
@@ -305,7 +306,8 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 	.hero-inner h1 {
 		margin: 0;
 		color: #fff;
-		font-family: Georgia, 'Times New Roman', serif;
+		//font-family: Georgia, 'Times New Roman', serif;
+		font-family: var(--font-markdown-heading);
 		font-size: clamp(4.1rem, 13vw, 9.5rem);
 		font-weight: 400;
 		letter-spacing: -0.08em;
@@ -441,6 +443,7 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 	}
 
 	.section-heading {
+
 		margin-bottom: 20px;
 		text-align: center;
 	}
@@ -455,9 +458,9 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 	}
 
 	.section-heading h2 {
+		font-family: var(--font-markdown-heading);
 		margin: 0;
 		color: #303030;
-		font-family: Georgia, 'Times New Roman', serif;
 		font-size: clamp(2rem, 5vw, 3.6rem);
 		font-weight: 400;
 		letter-spacing: -0.05em;
@@ -567,6 +570,41 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 	.post-flow {
 		display: grid;
 		gap: 28px;
+	}
+
+	.archive-more {
+		place-self: center;
+		display: grid;
+		width: 54px;
+		height: 54px;
+		place-items: center;
+		border: 1px solid rgba(254, 150, 0, 0.46);
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.72);
+		box-shadow: 0 14px 32px -24px rgba(254, 150, 0, 0.8);
+		color: #fe9600;
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: 28px;
+		line-height: 1;
+		text-decoration: none;
+		transition:
+			background-color 0.2s ease,
+			border-color 0.2s ease,
+			color 0.2s ease,
+			transform 0.2s ease;
+	}
+
+	.archive-more:hover,
+	.archive-more:focus-visible {
+		border-color: #fe9600;
+		background: #fe9600;
+		color: #fffaf3;
+		transform: translateY(-2px);
+	}
+
+	.archive-more:focus-visible {
+		outline: 2px solid rgba(254, 150, 0, 0.42);
+		outline-offset: 4px;
 	}
 
 	.post-row {
@@ -689,6 +727,7 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 		.hero-latest,
 		.hero-media :global(img),
 		.post-row,
+		.archive-more,
 		.post-thumb :global(img),
 		.feature-card :global(img),
 		.feature-title {

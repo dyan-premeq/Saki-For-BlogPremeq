@@ -24,13 +24,15 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				<div class="w-full">
 					{
 						heroImage && (
-							<Image
-								width={1020}
-								height={510}
-								src={heroImage}
-								alt=""
-								class="mx-auto block !rounded-xl shadow-[var(--box-shadow)]"
-							/>
+							<div class="mx-auto aspect-[16/9] w-full max-w-[1020px] overflow-hidden shadow-[var(--box-shadow)]">
+								<Image
+									width={1024}
+									height={576}
+									src={heroImage}
+									alt=""
+									class="block h-full w-full rounded-none object-cover"
+								/>
+							</div>
 						)
 					}
 				</div>

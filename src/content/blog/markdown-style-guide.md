@@ -1,6 +1,6 @@
 ---
 title: 'Markdown Style Guide'
-description: 'Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.'
+description: '为了测试前端，接下来这里会变得特别长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长'
 pubDate: 'Jun 19 2024'
 heroImage: '../../assets/blog-placeholder-1.jpg'
 isFeatured: false
@@ -28,9 +28,9 @@ The following HTML `<h1>`—`<h6>` elements represent six levels of section head
 
 ## Paragraph
 
-Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus eiur? Quianimin porecus evelectur, cum que nis nust voloribus ratem aut omnimi, sitatur? Quiatem. Nam, omnis sum am facea corem alique molestrunt et eos evelece arcillit ut aut eos eos nus, sin conecerem erum fuga. Ri oditatquam, ad quibus unda veliamenimin cusam et facea ipsamus es exerum sitate dolores editium rerore eost, temped molorro ratiae volorro te reribus dolorer sperchicium faceata tiustia prat.
+混合图形是一种硬件配置，你有两块显卡可以协同工作。这种方法主要出现在笔记本电脑上，CPU 集成显卡（iGPU）和独立显卡（dGPU）都用在笔记本上。主要优势是集成显卡应（但不一定）仅用于低调任务，如上网、观看视频等。另一方面，独立显卡则用于高性能领域，如游戏、视频剪辑、3D 建模等。因此，如果两块 GPU 共享 “大” 任务和 “小任务”，那么如果我们目前只有 “小” 任务在运行，就不需要使用 dGPU，可以简单地禁用它（就像处于睡眠状态），从而显著降低功耗。这样当我们再次需要使用独立显卡（我们运行一个应用时），它会唤醒并开始工作。
 
-Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sapicia is sinveli squiatum, core et que aut hariosam ex eat.
+PRIME 是一种统一技术，用于在 Linux 中处理不同混合图形组，比如 NVIDIA Optimus/AMD 动态可切换显卡。PRIME Offload 是将渲染执行从一个 GPU 转移到另一个 GPU 的实现。在 CachyOS 中， 你不需要配置任何东西就能让 PRIME Offload 正常工作 。有了 nvidia-utils 包和 cachyos-settings，你已经拥有使用 PRIME Offload 所需的一切。
 
 ## Images
 
