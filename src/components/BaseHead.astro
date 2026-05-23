@@ -16,6 +16,17 @@ interface Props {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const { title, description, image = FallbackImage } = Astro.props;
+
+const zeoSevenFontLinks = [
+	'https://fontsapi.zeoseven.com/24/main/result.css',
+	'https://fontsapi.zeoseven.com/292/main/result.css',
+	'https://fontsapi.zeoseven.com/802/main/result.css',
+]
+	.map(
+		(href) =>
+			`<link href="${href}" onload="this.onload=null;this.rel='stylesheet'" rel="preload" as="style" crossorigin /><noscript><link rel="stylesheet" href="${href}" /></noscript>`,
+	)
+	.join('');
 ---
 
 <!-- Global Metadata -->
@@ -34,6 +45,12 @@ const { title, description, image = FallbackImage } = Astro.props;
 
 <Font cssVariable="--font-atkinson" preload />
 <Font cssVariable="--font-cascadia-code" />
+<Font cssVariable="--font-jetbrains-mono" />
+<Font cssVariable="--font-syne" preload />
+<Font cssVariable="--font-tangerine" />
+<Font cssVariable="--font-liberation-serif" preload />
+
+<Fragment set:html={zeoSevenFontLinks} />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />

@@ -19,11 +19,13 @@
 	--prose-code-bg: color-mix(in srgb, var(--prose-accent) 10%, transparent);
 	width: 720px;
 	color: rgb(var(--gray-dark));
-	font-size: 1rem;
+	font-family: var(--font-markdown-body);
+	font-size: 0.95em;
 	line-height: 1.8;
 }
 
 .prose :where(h1, h2, h3, h4, h5, h6) {
+	font-family: var(--font-markdown-heading);
 	letter-spacing: -0.02em;
 	line-height: 1.2;
 }
@@ -61,10 +63,172 @@
 	text-decoration-color: var(--accent);
 }
 
+.prose :where(a[data-footnote-ref]) {
+	font-family: var(--font-markdown-footnote);
+	font-size: 0.72em;
+	font-weight: 700;
+	line-height: 1;
+	text-decoration: none;
+	text-underline-offset: 0.12em;
+	margin-left: 0.25em;
+	margin-right: 0.4em;
+}
+
+.prose :where(a[data-footnote-ref]:hover, a[data-footnote-ref]:focus-visible) {
+	text-decoration: underline;
+}
+
+.prose .markdown-footnotes {
+	margin-top: 4rem;
+	padding-top: 1.35rem;
+	border-top: 1px solid color-mix(in srgb, var(--prose-accent) 28%, rgb(var(--gray-light)));
+	color: color-mix(in srgb, rgb(var(--gray-dark)) 82%, rgb(var(--gray)));
+	font-family: var(--font-markdown-footnote);
+	font-size: 0.8em;
+	line-height: 1.65;
+}
+
+.prose .markdown-footnotes::before {
+	display: block;
+	width: 4.5rem;
+	height: 0.18rem;
+	margin-top: -1.45rem;
+	margin-bottom: 1.15rem;
+	border-radius: 999px;
+	background: linear-gradient(90deg, var(--prose-accent), color-mix(in srgb, #f9a8d4 58%, transparent));
+	content: '';
+}
+
+.prose .markdown-footnotes :where(.footnotes) {
+	margin: 0;
+	padding: 0;
+}
+
+.prose .markdown-footnotes :where(ol) {
+	margin: 0;
+	padding-left: 1.35rem;
+	list-style: decimal outside;
+	counter-reset: none;
+}
+
+.prose .markdown-footnotes :where(li) {
+	display: list-item;
+	margin: 0.55rem 0 0;
+	padding-left: 0.15rem;
+	scroll-margin-top: 6rem;
+}
+
+.prose .markdown-footnotes li::marker {
+	content: normal;
+	color: color-mix(in srgb, var(--prose-accent) 72%, rgb(var(--gray)));
+	font-weight: 700;
+}
+
+.prose .markdown-footnotes li:target,
+.prose .markdown-footnotes li.is-footnote-target-highlighted {
+	animation: footnote-target-emphasis 2.8s ease-out 1;
+}
+
+.prose :where(sup.is-footnote-reference-highlighted) {
+	animation: footnote-reference-location-emphasis 2.4s ease-out 1;
+}
+
+@keyframes footnote-target-emphasis {
+	0% {
+		background: color-mix(in srgb, var(--prose-accent) 14%, transparent);
+		box-shadow: inset 0.18rem 0 0 color-mix(in srgb, var(--prose-accent) 74%, #f9a8d4);
+	}
+	100% {
+		background: transparent;
+		box-shadow: inset 0.18rem 0 0 transparent;
+	}
+}
+
+@keyframes footnote-reference-location-emphasis {
+	0% {
+		background: color-mix(in srgb, var(--prose-accent) 16%, transparent);
+		box-shadow: 0 0 0 0.18em color-mix(in srgb, var(--prose-accent) 16%, transparent);
+		outline: 1px solid color-mix(in srgb, var(--prose-accent) 52%, transparent);
+		outline-offset: 0.12em;
+	}
+	100% {
+		background: transparent;
+		box-shadow: 0 0 0 0 transparent;
+		outline-color: transparent;
+		outline-offset: 0.18em;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.prose .markdown-footnotes li:target,
+	.prose .markdown-footnotes li.is-footnote-target-highlighted {
+		animation-name: footnote-target-emphasis-reduced;
+		animation-timing-function: step-end;
+	}
+
+	.prose :where(sup.is-footnote-reference-highlighted) {
+		animation-name: footnote-reference-location-emphasis-reduced;
+		animation-timing-function: step-end;
+	}
+}
+
+@keyframes footnote-target-emphasis-reduced {
+	0%,
+	85% {
+		background: color-mix(in srgb, var(--prose-accent) 14%, transparent);
+		box-shadow: inset 0.18rem 0 0 color-mix(in srgb, var(--prose-accent) 74%, #f9a8d4);
+	}
+	100% {
+		background: transparent;
+		box-shadow: inset 0.18rem 0 0 transparent;
+	}
+}
+
+@keyframes footnote-reference-location-emphasis-reduced {
+	0%,
+	85% {
+		background: color-mix(in srgb, var(--prose-accent) 16%, transparent);
+		box-shadow: 0 0 0 0.18em color-mix(in srgb, var(--prose-accent) 16%, transparent);
+		outline: 1px solid color-mix(in srgb, var(--prose-accent) 52%, transparent);
+		outline-offset: 0.12em;
+	}
+	100% {
+		background: transparent;
+		box-shadow: 0 0 0 0 transparent;
+		outline-color: transparent;
+		outline-offset: 0.18em;
+	}
+}
+
+.prose .markdown-footnotes :where(p) {
+	margin: 0;
+}
+
+.prose .markdown-footnotes :where(a[data-footnote-backref]) {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 1.3em;
+	min-height: 1.3em;
+	margin-left: 0.25em;
+	border-radius: 999px;
+	font-weight: 700;
+	line-height: 1;
+	text-decoration: none;
+	vertical-align: 0.05em;
+}
+
+.prose .markdown-footnotes :where(a[data-footnote-backref]:hover, a[data-footnote-backref]:focus-visible) {
+	background: color-mix(in srgb, var(--prose-accent) 12%, transparent);
+	text-decoration: none;
+}
+
 .prose :where(blockquote) {
 	border-left: 4px solid var(--accent);
 	padding-left: 1.25rem;
-	font-size: 1.2em;
+	font-family: var(--font-markdown-quote);
+	font-size: 1em;
+	font-size-adjust: 0.45;
 	font-style: normal;
 }
 

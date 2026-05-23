@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" width="120" height="80">
+    <defs>
+        <!-- 铅笔质感滤镜（保持微扰，不随缩放变形） -->
+        <filter id="pencil-texture" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.12" numOctaves="4" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </defs>
+
+    <!-- 组合应用滤镜 -->
+    <g filter="url(#pencil-texture)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+        <!-- 通过 transform 实现精确的扁平化缩放（水平拉宽 1.15 倍，垂直压扁 0.65 倍），并保持在 120x80 画布中心 -->
+        <g transform="translate(60, 40) scale(1.15, 0.65) translate(-50, -50)">
+
+            <!-- 第一笔（主轮廓） -->
+            <path d="M 52,16
+               C 30,14  14,32  15,58
+               C 16,84  42,92  68,84
+               C 94,76  97,46  84,26
+               C 72,6   44,10  32,25
+               C 20,40  24,65  46,75"
+                  stroke="#3d3d3d" stroke-width="2.3" opacity="0.85" />
+
+            <!-- 第二笔（重叠刮擦） -->
+            <path d="M 48,19
+               C 28,16  16,36  18,60
+               C 20,84  46,88  70,80
+               C 94,72  93,42  79,24
+               C 65,6   38,15  28,35"
+                  stroke="#555555" stroke-width="1.8" opacity="0.7" />
+
+            <!-- 附加回笔尾迹 -->
+            <path d="M 28,28 C 24,33 21,42 23,48"
+                  stroke="#444444" stroke-width="1.5" opacity="0.5" />
+
+        </g>
+    </g>
+</svg>

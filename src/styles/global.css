@@ -9,7 +9,11 @@
 @import "./typography.css";
 
 @theme inline {
-	--font-code-block: "JetBrains Mono", var(--font-cascadia-code), monospace;
+	--font-markdown-body: var(--font-syne), "LXGW WenKai", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+	--font-markdown-footnote: var(--font-atkinson), sans-serif;
+	--font-markdown-quote: var(--font-tangerine), "YShi-Written", "KaiTi", "STKaiti", "SimKai", "LXGW WenKai", cursive, serif;
+	--font-markdown-heading: "Times New Roman", var(--font-liberation-serif), "Liberation Serif", Georgia, "Noto Serif", "Noto Serif CJK SC", "Songti SC", SimSun, serif;
+	--font-code-block: var(--font-jetbrains-mono), var(--font-cascadia-code), "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
 :root {

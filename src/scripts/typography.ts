@@ -59,5 +59,111 @@ function attachCopyButtons() {
 	}
 }
 
+const footnoteTargetHighlightClass = 'is-footnote-target-highlighted';
+const footnoteReferenceHighlightClass = 'is-footnote-reference-highlighted';
+
+function getSamePageHashTarget(anchor: HTMLAnchorElement) {
+	const url = new URL(anchor.href, window.location.href);
+
+	if (
+		url.origin !== window.location.origin ||
+		url.pathname !== window.location.pathname ||
+		url.search !== window.location.search ||
+		url.hash.length <= 1
+	) {
+		return null;
+	}
+
+	return getHashTarget(url.hash);
+}
+
+function getHashTarget(hash: string) {
+	if (!hash.startsWith('#') || hash.length <= 1) return null;
+
+	try {
+		return document.getElementById(decodeURIComponent(hash.slice(1)));
+	} catch {
+		return document.getElementById(hash.slice(1));
+	}
+}
+
+function isFootnoteNavigationTarget(target: HTMLElement) {
+	return (
+		target.matches('.prose a[data-footnote-ref]') ||
+		(target.matches('.prose .markdown-footnotes li[id]') && target.closest('.prose') !== null)
+	);
+}
+
+function getFootnoteReferenceHighlightTarget(target: HTMLElement) {
+	const sup = target.closest('sup');
+	if (sup instanceof HTMLElement && sup !== target) return sup;
+
+	let parent = target.parentElement;
+	while (parent?.matches('a')) parent = parent.parentElement;
+
+	return parent;
+}
+
+function getFootnoteHighlight(target: HTMLElement) {
+	if (target.matches('.prose a[data-footnote-ref]')) {
+		const element = getFootnoteReferenceHighlightTarget(target);
+		return element ? { element, className: footnoteReferenceHighlightClass } : null;
+	}
+
+	if (target.matches('.prose .markdown-footnotes li[id]') && target.closest('.prose') !== null) {
+		return { element: target, className: footnoteTargetHighlightClass };
+	}
+
+	return null;
+}
+
+function navigateToFootnoteTarget(target: HTMLElement, hash: string) {
+	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	target.scrollIntoView({
+		block: 'center',
+		inline: 'nearest',
+		behavior: prefersReducedMotion ? 'auto' : 'smooth',
+	});
+
+	window.history.pushState(null, '', hash);
+
+	const highlight = getFootnoteHighlight(target);
+	highlight?.element.classList.add(highlight.className);
+	window.setTimeout(() => {
+		highlight?.element.classList.remove(highlight.className);
+	}, 1400);
+}
+
+function attachFootnoteNavigation() {
+	const footnoteAnchors = Array.from(
+		document.querySelectorAll<HTMLAnchorElement>(
+			'.prose a[data-footnote-ref], .prose a[data-footnote-backref]',
+		),
+	);
+
+	for (const anchor of footnoteAnchors) {
+		if (anchor.dataset.footnoteNavigationAttached === 'true') continue;
+		anchor.dataset.footnoteNavigationAttached = 'true';
+
+		anchor.addEventListener('click', (event) => {
+			const target = getSamePageHashTarget(anchor);
+			if (!target) return;
+
+			event.preventDefault();
+			navigateToFootnoteTarget(target, new URL(anchor.href, window.location.href).hash);
+		});
+	}
+
+	const initialTarget = getHashTarget(window.location.hash);
+	if (initialTarget && isFootnoteNavigationTarget(initialTarget)) {
+		window.setTimeout(() => {
+			navigateToFootnoteTarget(initialTarget, window.location.hash);
+		}, 0);
+	}
+}
+
 attachCopyButtons();
+attachFootnoteNavigation();
 document.addEventListener('astro:page-load', attachCopyButtons);
+document.addEventListener('astro:page-load', attachFootnoteNavigation);

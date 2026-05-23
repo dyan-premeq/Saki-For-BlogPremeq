@@ -8,6 +8,8 @@ isFeatured: false
 
 Here is a sample of some basic Markdown syntax that can be used when writing Markdown content in Astro.
 
+以下是一些 markdown 语法的实例。
+
 ## Headings
 
 The following HTML `<h1>`—`<h6>` elements represent six levels of section headings. `<h1>` is the highest section level while `<h6>` is the lowest.
@@ -51,13 +53,17 @@ The blockquote element represents content that is quoted from another source, op
 #### Syntax
 
 ```markdown
-> Tiam, ad mint andaepu dandae nostion secatur sequo quae.  
+> Tiam, ad mint andaepu dandae nostion secatur sequo quae.
+> 叮咚鸡叮咚鸡，大狗大狗嚼嚼嚼
 > **Note** that you can use _Markdown syntax_ within a blockquote.
 ```
 
 #### Output
 
-> Tiam, ad mint andaepu dandae nostion secatur sequo quae.  
+> Tiam, ad mint andaepu dandae nostion secatur sequo quae.
+> 
+> 叮咚鸡叮咚鸡，大狗大狗嚼嚼嚼
+> 
 > **Note** that you can use _Markdown syntax_ within a blockquote.
 
 ### Blockquote with attribution
@@ -190,7 +196,7 @@ we can use 3 backticks ``` in new line and write snippet and close with 3 backti
 
 ### Syntax
 
-```markdown
+```html
 <abbr title="Graphics Interchange Format">GIF</abbr> is a bitmap image format.
 
 H<sub>2</sub>O

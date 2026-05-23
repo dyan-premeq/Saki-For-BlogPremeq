@@ -49,7 +49,7 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 	</head>
 	<body class="saki-home">
 		<Header />
-		<main class="sakura-home">
+		<main class="saki-home-base">
 			<section class="home-hero" aria-labelledby="hero-title">
 				<div class="hero-media" aria-hidden="true">
 					<Image src={heroImage} alt="" width={1800} height={1000} loading="eager" />
@@ -128,7 +128,7 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 		<Footer />
 		<script>
 			const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-			const home = document.querySelector('.sakura-home');
+			const home = document.querySelector('.saki-home-base');
 			const hero = document.querySelector('.home-hero');
 			const postRows = document.querySelectorAll('.post-row');
 			const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
@@ -193,11 +193,16 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 <style>
 	:global(body.saki-home) {
 		--background: 255 255 255;
+		--middle-background: 255 250 243;
 		background: rgb(var(--background));
 		color: #353535;
 	}
 
-	.sakura-home {
+	:global(body.saki-home .site-footer) {
+		position: relative;
+		z-index: 20;
+	}
+	.saki-home-base {
 		--content-lift: 0px;
 		--cover-fade: 0;
 		--hero-blur: 0px;
@@ -207,10 +212,11 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 		--hero-scale: 1.03;
 		--hero-shade-opacity: 1;
 		background: rgb(var(--background));
+		overflow: clip;
 		width: 100%;
 		max-width: none;
 		margin: 0;
-		padding: 0 0 72px;
+		padding: 0;
 	}
 
 	.home-hero {
@@ -370,8 +376,10 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 		position: relative;
 		z-index: 10;
 		margin-top: 0;
+		margin-bottom: var(--content-lift);
 		padding-top: 54px;
-		background-color: rgb(var(--background));
+		padding-bottom: calc(72px - var(--content-lift));
+		background-color: rgb(var(--middle-background));
 		background-image: repeating-linear-gradient(90deg, rgba(254, 150, 0, 0.035) 0 1px, transparent 1px 96px);
 		transform: translate3d(0, var(--content-lift), 0);
 		will-change: transform;

@@ -8,6 +8,7 @@ import {
 	transformerNotationWordHighlight,
 } from '@shikijs/transformers';
 import { rehypeCodeBlockFrame } from './src/utils/rehype/codeBlockFrame';
+import { rehypeMarkdownFootnotes } from './src/utils/rehype/footnotes';
 import { transformerFileName } from './src/utils/transformers/fileName';
 
 // https://astro.build/config
@@ -15,7 +16,7 @@ export default defineConfig({
 	site: 'https://example.com',
 	integrations: [mdx(), sitemap()],
 	markdown: {
-		rehypePlugins: [rehypeCodeBlockFrame],
+		rehypePlugins: [rehypeCodeBlockFrame, rehypeMarkdownFootnotes],
 		shikiConfig: {
 			themes: { light: 'min-light', dark: 'github-dark-default' },
 			defaultColor: false,
@@ -36,7 +37,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'Atkinson',
 			cssVariable: '--font-atkinson',
-			fallbacks: ['sans-serif'],
+			fallbacks: [],
 			options: {
 				variants: [
 					{
@@ -63,6 +64,88 @@ export default defineConfig({
 				variants: [
 					{
 						src: ['./src/assets/fonts/cascadia-code.woff2'],
+						display: 'swap',
+					},
+				],
+			},
+		},
+		{
+			provider: fontProviders.local(),
+			name: 'JetBrains Mono',
+			cssVariable: '--font-jetbrains-mono',
+			fallbacks: ['monospace'],
+			options: {
+				variants: [
+					{
+						src: ['./src/assets/fonts/JetBrainsMono-Regular.woff2'],
+						weight: 400,
+						style: 'normal',
+						display: 'swap',
+					},
+				],
+			},
+		},
+		{
+			provider: fontProviders.local(),
+			name: 'Syne',
+			cssVariable: '--font-syne',
+			fallbacks: [],
+			options: {
+				variants: [
+					{
+						src: ['./src/assets/fonts/Syne-Regular.woff2'],
+						weight: 400,
+						style: 'normal',
+						display: 'swap',
+					},
+					{
+						src: ['./src/assets/fonts/Syne-Bold.woff2'],
+						weight: 700,
+						style: 'normal',
+						display: 'swap',
+					},
+				],
+			},
+		},
+		{
+			provider: fontProviders.local(),
+			name: 'Tangerine',
+			cssVariable: '--font-tangerine',
+			fallbacks: [],
+			options: {
+				variants: [
+					{
+						src: ['./src/assets/fonts/Tangerine-Regular.woff2'],
+						weight: 400,
+						style: 'normal',
+						display: 'swap',
+					},
+					{
+						src: ['./src/assets/fonts/Tangerine-Bold.woff2'],
+						weight: 700,
+						style: 'normal',
+						display: 'swap',
+					},
+				],
+			},
+		},
+		{
+			provider: fontProviders.local(),
+			name: 'Liberation Serif',
+			cssVariable: '--font-liberation-serif',
+			fallbacks: [],
+			options: {
+				variants: [
+					{
+						src: ['./src/assets/fonts/LiberationSerif-Regular.woff2'],
+						weight: 400,
+						style: 'normal',
+						display: 'swap',
+					},
+					{
+						src: ['./src/assets/fonts/LiberationSerif-Bold.woff2'],
+						weight: 700,
+						style: 'normal',
 						display: 'swap',
 					},
 				],

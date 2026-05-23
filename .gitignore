@@ -21,7 +21,7 @@ pnpm-debug.log*
 .DS_Store
 
 # vscode
-.vscode
+.vscode/
 
 # jetbrains setting folder
 .idea/
@@ -32,3 +32,5 @@ AGENTS.md
 
 # placeholder file
 **/_*
+.ai-log-report/
+/.vscode/
