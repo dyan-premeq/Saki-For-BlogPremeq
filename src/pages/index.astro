@@ -45,7 +45,7 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 	<body class="saki-home">
 		<Header />
 		<main class="saki-home-base">
-			<section class="home-hero" aria-labelledby="hero-title">
+			<section class="home-hero" aria-label="站点简介">
 				<div class="hero-media" aria-hidden="true">
 					<img src={SITE.homeHero} alt="" width="1800" height="1000" loading="eager" />
 				</div>
@@ -54,7 +54,6 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 				<div class="hero-wash" aria-hidden="true"></div>
 
 				<div class="hero-inner">
-					<h1 id="hero-title">{SITE.title}</h1>
 					<p class="hero-copy">{SITE.description}</p>
 				</div>
 
@@ -298,19 +297,9 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 		text-transform: uppercase;
 	}
 
-	.hero-inner h1 {
-		margin: 0;
-		color: #fff;
-		font-family: var(--font-markdown-heading);
-		font-size: clamp(4.1rem, 13vw, 9.5rem);
-		font-weight: 400;
-		letter-spacing: -0.08em;
-		line-height: 0.82;
-	}
-
 	.hero-copy {
 		max-width: 640px;
-		margin: 28px auto 0;
+		margin: 0 auto;
 		color: rgba(255, 255, 255, 0.82);
 		font-size: clamp(1rem, 2vw, 1.25rem);
 		line-height: 1.8;
@@ -778,10 +767,6 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 	}
 
 	@media (max-width: 560px) {
-		.hero-inner h1 {
-			font-size: clamp(3.4rem, 21vw, 5.4rem);
-		}
-
 		.hero-copy {
 			font-size: 0.98rem;
 		}
