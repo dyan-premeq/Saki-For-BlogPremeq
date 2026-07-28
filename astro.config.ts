@@ -10,12 +10,17 @@ import {
 import { rehypeCodeBlockFrame } from './src/utils/rehype/codeBlockFrame';
 import { rehypeMarkdownFootnotes } from './src/utils/rehype/footnotes';
 import { transformerFileName } from './src/utils/transformers/fileName';
+import { BLOG_PUBLIC_DIR } from './src/content-paths';
+import { loadSiteConfig } from './src/config/load-site-config';
 
 import cloudflare from '@astrojs/cloudflare';
 
+const SITE = loadSiteConfig();
+
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://dyan.premequre.space/',
+  site: SITE.website,
+  publicDir: BLOG_PUBLIC_DIR,
   integrations: [mdx(), sitemap()],
 
   markdown: {
@@ -34,7 +39,10 @@ export default defineConfig({
 	},
 
   vite: {
-      plugins: [tailwindcss()],
+		define: {
+			__SAKI_SITE_CONFIG__: JSON.stringify(SITE),
+		},
+		plugins: [tailwindcss()],
 	},
 
   fonts: [

@@ -1,0 +1,19 @@
+---
+title: 'Using MDX'
+description: 'A draft MDX entry with no engine-internal component imports.'
+pubDate: '2026-07-03'
+tags:
+  - mdx
+---
+
+This engine includes the [Astro MDX integration](https://docs.astro.build/en/guides/integrations-guide/mdx/).
+
+## Why MDX?
+
+MDX allows Markdown documents to include expressions and components. External content should import only components that it owns or stable public APIs supplied by the engine.
+
+The default draft state keeps this entry out of production builds. Set `BLOG_INCLUDE_DRAFTS=true` with `pnpm dev` to see it locally.
+
+## A safe expression
+
+Two plus two is {2 + 2}. This example has no fragile relative import into the engine source tree.

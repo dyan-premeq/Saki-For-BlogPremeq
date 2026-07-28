@@ -1,25 +1,20 @@
 ---
 import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
-import HeroFallback from '../assets/blog-placeholder-5.jpg';
 import FeatureFallbackOne from '../assets/blog-placeholder-1.jpg';
 import FeatureFallbackTwo from '../assets/blog-placeholder-2.jpg';
 import FeatureFallbackThree from '../assets/blog-placeholder-4.jpg';
-import HomeHeroImage from '../assets/home-hero.png';
 import { SITE } from '../site_config';
+import { getPostSlug, getVisiblePosts } from '../utils/content';
 
-const posts = (await getCollection('blog')).filter((post) => !post.data.isDraft).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = await getVisiblePosts();
 
 const fallbackImages = [FeatureFallbackOne, FeatureFallbackTwo, FeatureFallbackThree];
 const heroPost = posts[0];
-const heroImage = HomeHeroImage ?? heroPost?.data.heroImage ?? HeroFallback;
-const heroHref = heroPost ? `/post/${heroPost.id}/` : '/post/';
+const heroHref = heroPost ? `/post/${getPostSlug(heroPost)}/` : '/post/';
 
 const featureCards = posts
 	.filter((post) => post.data.isFeatured)
@@ -27,7 +22,7 @@ const featureCards = posts
 	.map((post, index) => ({
 		title: post.data.title,
 		description: post.data.description,
-		href: `/post/${post.id}/`,
+		href: `/post/${getPostSlug(post)}/`,
 		image: post.data.heroImage ?? fallbackImages[index % fallbackImages.length],
 		label: index === 0 ? 'Focus' : `0${index + 1}`,
 	}));
@@ -35,7 +30,7 @@ const featureCards = posts
 const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 	title: post.data.title,
 	description: post.data.description,
-	href: `/post/${post.id}/`,
+	href: `/post/${getPostSlug(post)}/`,
 	image: post.data.heroImage ?? fallbackImages[index % fallbackImages.length],
 	date: post.data.pubDate,
 	index,
@@ -43,7 +38,7 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={SITE.lang} dir={SITE.dir}>
 	<head>
 		<BaseHead title={SITE.title} description={SITE.description} />
 	</head>
@@ -52,14 +47,14 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 		<main class="saki-home-base">
 			<section class="home-hero" aria-labelledby="hero-title">
 				<div class="hero-media" aria-hidden="true">
-					<Image src={heroImage} alt="" width={1800} height={1000} loading="eager" />
+					<img src={SITE.homeHero} alt="" width="1800" height="1000" loading="eager" />
 				</div>
 				<div class="hero-shade" aria-hidden="true"></div>
 				<div class="hero-grid" aria-hidden="true"></div>
 				<div class="hero-wash" aria-hidden="true"></div>
 
 				<div class="hero-inner">
-					<h1 id="hero-title">{SITE.themeTitle}</h1>
+					<h1 id="hero-title">{SITE.title}</h1>
 					<p class="hero-copy">{SITE.description}</p>
 				</div>
 
@@ -306,7 +301,6 @@ const discoveryCards = posts.slice(0, 5).map((post, index) => ({
 	.hero-inner h1 {
 		margin: 0;
 		color: #fff;
-		//font-family: Georgia, 'Times New Roman', serif;
 		font-family: var(--font-markdown-heading);
 		font-size: clamp(4.1rem, 13vw, 9.5rem);
 		font-weight: 400;

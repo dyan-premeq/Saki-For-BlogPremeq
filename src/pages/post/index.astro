@@ -1,15 +1,13 @@
 ---
 import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE } from '../../site_config';
+import { getPostSlug, getVisiblePosts } from '../../utils/content';
 
-const posts = (await getCollection('blog')).filter((post) => !post.data.isDraft).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = await getVisiblePosts();
 
 const postsByYear = posts.reduce<Record<string, typeof posts>>((groups, post) => {
 	const year = String(post.data.pubDate.getFullYear());
@@ -22,7 +20,7 @@ const yearGroups = Object.entries(postsByYear).sort(([yearA], [yearB]) => Number
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang={SITE.lang} dir={SITE.dir}>
 	<head>
 		<BaseHead title={SITE.title} description={SITE.description} />
 	</head>
@@ -49,7 +47,7 @@ const yearGroups = Object.entries(postsByYear).sort(([yearA], [yearB]) => Number
 									yearPosts.map((post, index) => (
 										<li class="sticker-item" style={`--tilt: ${index % 2 === 0 ? '-0.35deg' : '0.45deg'}`}>
 											<article class="post-sticker">
-												<a class="sticker-link" href={`/post/${post.id}/`} aria-label={`Read ${post.data.title}`}>
+													<a class="sticker-link" href={`/post/${getPostSlug(post)}/`} aria-label={`Read ${post.data.title}`}>
 													<span class="date-tab font-markdown-footnote">
 														<FormattedDate date={post.data.pubDate} />
 													</span>
@@ -111,7 +109,6 @@ const yearGroups = Object.entries(postsByYear).sort(([yearA], [yearB]) => Number
 			linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 251, 235, 0.9)),
 			repeating-linear-gradient(0deg, rgba(63, 53, 44, 0.035) 0 1px, transparent 1px 14px);
 		box-shadow: 0 22px 54px -44px rgba(88, 48, 8, 0.65);
-		//clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
 	}
 
 	.archive-hero::after {

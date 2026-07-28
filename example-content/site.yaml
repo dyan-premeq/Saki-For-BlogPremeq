@@ -1,0 +1,17 @@
+website: https://example.com/
+title: Saki Example
+description: A standalone example for the Saki website engine.
+author: Example Author
+lang: en
+dir: ltr
+timezone: UTC
+notice: Replace example-content by setting BLOG_CONTENT_DIR.
+avatar:
+  src: /avatar.svg
+  alt: Geometric example avatar
+homeHero: /site-hero.svg
+socials:
+  - name: GitHub
+    href: https://github.com/dyan-premeq/Saki-For-BlogPremeq
+    icon: github
+    linkTitle: Saki website engine on GitHub

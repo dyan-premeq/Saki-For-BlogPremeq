@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1000" role="img" aria-label="Abstract Saki example hero">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#19151f"/>
+      <stop offset="0.55" stop-color="#6e3c50"/>
+      <stop offset="1" stop-color="#fe9600"/>
+    </linearGradient>
+    <pattern id="p" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M80 0H0V80" fill="none" stroke="#fff" stroke-opacity=".12"/>
+    </pattern>
+  </defs>
+  <rect width="1800" height="1000" fill="url(#g)"/>
+  <rect width="1800" height="1000" fill="url(#p)"/>
+  <circle cx="1320" cy="280" r="230" fill="#f9a8d4" fill-opacity=".25"/>
+  <path d="M0 800C340 650 610 900 980 720s580-160 820-40v320H0Z" fill="#fffaf3" fill-opacity=".16"/>
+</svg>

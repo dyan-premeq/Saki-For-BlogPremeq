@@ -5,7 +5,7 @@ import AboutPage from '../layouts/AboutPage.astro';
 const about = await getEntry('about', 'about');
 
 if (!about) {
-	throw new Error('Missing about content entry: src/content/about.md');
+	throw new Error('Missing required content entry: pages/about.md in BLOG_CONTENT_DIR');
 }
 
 const { Content } = await render(about);

@@ -1,20 +1,18 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 import { SITE } from '../site_config.ts';
+import { getPostSlug, getVisiblePosts } from '../utils/content';
 
 export async function GET(context: APIContext) {
-	const posts = (await getCollection('blog'))
-		.filter((post) => !post.data.isDraft)
-		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+	const posts = await getVisiblePosts();
 
 	return rss({
 		title: SITE.title,
 		description: SITE.description,
-		site: context.site ?? new URL('https://example.com'),
+		site: context.site ?? new URL(SITE.website),
 		items: posts.map((post) => ({
 			...post.data,
-			link: `/post/${post.id}/`,
+			link: `/post/${getPostSlug(post)}/`,
 		})),
 	});
 }

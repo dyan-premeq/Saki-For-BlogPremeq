@@ -28,10 +28,10 @@ pnpm-debug.log*
 
 # vide coding
 AGENTS.md
+.codex/
 .opencode/
+openspec/
 
-# placeholder file
-**/_*
 .ai-log-report/
 /.vscode/
 

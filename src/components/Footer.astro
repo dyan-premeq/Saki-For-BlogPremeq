@@ -5,14 +5,22 @@ const today = new Date();
 ---
 
 <footer class="site-footer">
+	<img class="footer-avatar" src={SITE.avatar.src} alt={SITE.avatar.alt} width="64" height="64" loading="lazy" />
 	<p class="footer-title">{SITE.title}</p>
 	<p class="footer-copy">
-		&copy; {today.getFullYear()} Dyan Premeq. Built with <a href="https://astro.build/">Astro</a>.
+		&copy; {today.getFullYear()} {SITE.author}. Built with <a href="https://astro.build/">Astro</a>.
 	</p>
 	<nav class="footer-links" aria-label="Footer navigation">
 		<a href="/post/">Archive</a>
 		<a href="/about/">About</a>
 		<a href="/rss.xml">RSS</a>
+		{
+			SITE.socials.map((social) => (
+				<a href={social.href} title={social.linkTitle} rel="me">
+					{social.name}
+				</a>
+			))
+		}
 	</nav>
 </footer>
 
@@ -25,6 +33,16 @@ const today = new Date();
 			repeating-linear-gradient(90deg, rgba(254, 150, 0, 0.05) 0 1px, transparent 1px 92px);
 		color: rgba(0, 0, 0, 0.48);
 		text-align: center;
+	}
+
+	.footer-avatar {
+		display: block;
+		width: 64px;
+		height: 64px;
+		margin: 0 auto 14px;
+		border: 2px solid rgba(254, 150, 0, 0.32);
+		border-radius: 999px;
+		object-fit: cover;
 	}
 
 	.footer-title {
@@ -42,6 +60,7 @@ const today = new Date();
 
 	.footer-links {
 		display: flex;
+		flex-wrap: wrap;
 		justify-content: center;
 		gap: 22px;
 		margin-top: 18px;

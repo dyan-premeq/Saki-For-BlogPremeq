@@ -1,63 +1,87 @@
-# Astro Starter Kit: Blog
+# 网站引擎仓库 / Saki Website Engine
+
+> **仓库职责：这是网站引擎仓库 `dyan-premeq/Saki-For-BlogPremeq`。** 这里只维护 Astro 代码、样式和组件。个人文章、个人资料、品牌资源与生产发布属于相邻的内容仓库 `~/Projects/blog`；废稿归档不参与开发或发布。
+
+Saki is an Astro 6 static blog engine. It is deliberately usable both with its public example content and with a separate private content checkout. Do not copy personal content into this repository and do not use a submodule or packaged theme to connect the two repositories.
+
+## Repository identity
+
+Every maintenance command checks both `repo-role.json` and the Git `origin` before it runs:
 
 ```sh
-pnpm create astro@latest -- --template blog
+pnpm check:repo
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The expected local directory is `~/Projects/saki-astro`, and `origin` must identify `dyan-premeq/Saki-For-BlogPremeq`. Every engine command checks both `repo-role.json` and the Git `origin`; a copied source tree or the draft archive is deliberately rejected.
 
-Features:
+## Content interface
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+`BLOG_CONTENT_DIR` selects an external content root. Relative values are resolved from the website engine repository; when unset, the engine uses `example-content/`.
 
 ```text
+<content-root>/
+├── posts/
+│   └── <slug>/
+│       ├── index.md or index.mdx
+│       └── cover.png
+├── pages/
+│   └── about.md
 ├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.ts
-├── README.md
-├── package.json
-└── tsconfig.json
+│   ├── favicon.svg
+│   └── personal static assets
+└── site.yaml
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Post frontmatter accepts `title`, `description`, `pubDate`, `updatedDate`, `heroImage`, `isDraft`, `isFeatured`, and `tags`. Dates must be quoted ISO dates (`'2026-07-28'`) or UTC timestamps. `isDraft` defaults to `true`, and article images should use a colocated relative path such as `./cover.png`.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+`site.yaml` is validated strictly. It must contain:
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+```yaml
+website: https://example.com/
+title: Site title
+description: Site description
+author: Author name
+lang: en
+dir: ltr
+timezone: UTC
+notice: Site announcement
+avatar:
+  src: /avatar.png
+  alt: Author avatar
+homeHero: /hero.png
+socials:
+  - name: GitHub
+    href: https://github.com/example
+    icon: github
+    linkTitle: Example on GitHub
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+Unknown configuration or frontmatter fields, malformed dates, missing local images, and missing About content fail validation/build.
 
-## 🧞 Commands
+## Development and production
 
-All commands are run from the root of the project, from a terminal:
+Install and verify with the pinned package manager:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+```sh
+pnpm install --frozen-lockfile
+pnpm check
+pnpm build
+```
 
-## 👀 Want to learn more?
+For engine-only development, the example content works without any private checkout. For integrated local writing, point to the content repository and opt into drafts:
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```sh
+BLOG_CONTENT_DIR=../blog BLOG_INCLUDE_DRAFTS=true pnpm dev
+```
 
-## Credit
+Draft inclusion is honored only by the development server. Production builds always exclude drafts from the homepage, archive, static post routes, RSS, and generated sitemap.
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+The canonical site URL is read from `site.yaml`. Post routes remain `/post/<slug>/`, RSS remains `/rss.xml`, and sitemap generation remains enabled. Cloudflare deployment configuration stays in `wrangler.jsonc`; production deployment is owned by the private content repository workflow.
+
+## Technology
+
+- Astro 6 and strict TypeScript
+- Tailwind CSS 4
+- Markdown and MDX content collections
+- Cloudflare Workers adapter
+- pnpm 11.3.0

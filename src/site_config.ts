@@ -1,19 +1,28 @@
-// Place any global data in this file.
-// You can import this data from anywhere in your site by using the `import` keyword.
+export interface SocialLink {
+	name: string;
+	href: string;
+	icon?: 'mail' | 'github' | 'x' | 'zhihu' | 'bilibili' | 'rss';
+	linkTitle?: string;
+}
 
-export const SITE = {
-    website: "https://dyan.premequre.space/",
-    description: '山城海路，终有一逢。',
-    title: 'Premequre',
-    themeTitle: '',
-    author: 'dyan',
-    profile: 'https://github.com/dyan-premeq',
-    avatar: {
-        src: 'https://github.com/dyan-premeq.png',
-        alt: 'Dyan-Premeq',
-    },
-    dir: "ltr", // "rtl" | "auto"
-    lang: "zh-CN", // HTML lang code. Set this empty and default will be "en"
-    timezone: "Asia/Shanghai",
-    notice: "哦哦，哦哦哦！这里是公告。"
-} as const;
+export interface SiteConfig {
+	website: string;
+	title: string;
+	description: string;
+	author: string;
+	lang: string;
+	dir: 'ltr' | 'rtl' | 'auto';
+	timezone: string;
+	notice: string;
+	avatar: {
+		src: string;
+		alt: string;
+	};
+	homeHero: string;
+	socials: SocialLink[];
+}
+
+declare const __SAKI_SITE_CONFIG__: SiteConfig;
+
+/** Validated and injected by astro.config.ts before any page code is bundled. */
+export const SITE: Readonly<SiteConfig> = Object.freeze(__SAKI_SITE_CONFIG__);
