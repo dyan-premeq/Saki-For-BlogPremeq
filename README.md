@@ -1,66 +1,64 @@
-# 网站引擎仓库 / Saki Website Engine
+# Saki
 
-> **仓库职责：这是网站引擎仓库 `dyan-premeq/Saki-For-BlogPremeq`。** 这里只维护 Astro 代码、样式和组件。个人文章、个人资料、品牌资源与生产发布属于相邻的内容仓库 `~/Projects/blog`；废稿归档不参与开发或发布。
+Saki 是一个基于 Astro 6 的静态博客引擎。它既可以使用公开的示例内容独立运行，也可以读取单独检出的私有内容。请勿将个人内容复制到本仓库，也不要使用 Git 子模块或封装主题来连接两个仓库。
 
-Saki is an Astro 6 static blog engine. It is deliberately usable both with its public example content and with a separate private content checkout. Do not copy personal content into this repository and do not use a submodule or packaged theme to connect the two repositories.
+## 仓库身份
 
-## Repository identity
-
-Every maintenance command checks both `repo-role.json` and the Git `origin` before it runs:
+请在 Git 工作树根目录运行仓库身份检查：
 
 ```sh
 pnpm check:repo
 ```
 
-The expected local directory is `~/Projects/saki-astro`, and `origin` must identify `dyan-premeq/Saki-For-BlogPremeq`. Every engine command checks both `repo-role.json` and the Git `origin`; a copied source tree or the draft archive is deliberately rejected.
+受身份保护的项目脚本会自动执行此检查。检查内容包括：当前目录是否为工作树根目录，以及 `repo-role.json` 与 Git `origin` 是否指向预期仓库。
 
-## Content interface
+## 内容接口
 
-`BLOG_CONTENT_DIR` selects an external content root. Relative values are resolved from the website engine repository; when unset, the engine uses `example-content/`.
+`BLOG_CONTENT_DIR` 用于指定外部内容根目录。相对路径以网站引擎仓库为基准解析；未设置时，引擎使用 `example-content/`。
 
 ```text
-<content-root>/
+<内容根目录>/
 ├── posts/
 │   └── <slug>/
-│       ├── index.md or index.mdx
+│       ├── index.md 或 index.mdx
 │       └── cover.png
 ├── pages/
 │   └── about.md
 ├── public/
 │   ├── favicon.svg
-│   └── personal static assets
+│   └── 个人静态资源
 └── site.yaml
 ```
 
-Post frontmatter accepts `title`, `description`, `pubDate`, `updatedDate`, `heroImage`, `isDraft`, `isFeatured`, and `tags`. Dates must be quoted ISO dates (`'2026-07-28'`) or UTC timestamps. `isDraft` defaults to `true`, and article images should use a colocated relative path such as `./cover.png`.
+文章头部元数据（frontmatter）支持 `title`、`description`、`pubDate`、`updatedDate`、`heroImage`、`isDraft`、`isFeatured` 和 `tags`。日期必须是带引号的 ISO 日期（如 `'2026-07-28'`）或 UTC 时间戳。`isDraft` 默认为 `true`；文章图片应使用同目录下的相对路径，例如 `./cover.png`。
 
-`site.yaml` is validated strictly. It must contain:
+`site.yaml` 会经过严格校验，且必须包含以下字段：
 
 ```yaml
 website: https://example.com/
-title: Site title
-description: Site description
-author: Author name
+title: 网站标题
+description: 网站描述
+author: 作者名称
 lang: en
 dir: ltr
 timezone: UTC
-notice: Site announcement
+notice: 网站公告
 avatar:
   src: /avatar.png
-  alt: Author avatar
+  alt: 作者头像
 homeHero: /hero.png
 socials:
   - name: GitHub
     href: https://github.com/example
     icon: github
-    linkTitle: Example on GitHub
+    linkTitle: GitHub 示例
 ```
 
-Unknown configuration or frontmatter fields, malformed dates, missing local images, and missing About content fail validation/build.
+出现未知的配置字段或头部元数据字段、格式错误的日期、缺失的本地图片或缺失的“关于”页面内容时，校验或构建会失败。
 
-## Development and production
+## 开发与生产
 
-Install and verify with the pinned package manager:
+使用项目锁定的包管理器安装依赖并验证：
 
 ```sh
 pnpm install --frozen-lockfile
@@ -68,20 +66,20 @@ pnpm check
 pnpm build
 ```
 
-For engine-only development, the example content works without any private checkout. For integrated local writing, point to the content repository and opt into drafts:
+仅开发引擎时，可以直接使用示例内容，无需检出任何私有内容。需要在本地结合内容仓库写作时，请指定内容仓库并启用草稿：
 
 ```sh
 BLOG_CONTENT_DIR=../blog BLOG_INCLUDE_DRAFTS=true pnpm dev
 ```
 
-Draft inclusion is honored only by the development server. Production builds always exclude drafts from the homepage, archive, static post routes, RSS, and generated sitemap.
+只有开发服务器会读取草稿开关。生产构建始终会从首页、归档、静态文章路由、RSS 和生成的站点地图中排除草稿。
 
-The canonical site URL is read from `site.yaml`. Post routes remain `/post/<slug>/`, RSS remains `/rss.xml`, and sitemap generation remains enabled. Cloudflare deployment configuration stays in `wrangler.jsonc`; production deployment is owned by the private content repository workflow.
+网站规范 URL 从 `site.yaml` 读取。文章路由保持为 `/post/<slug>/`，RSS 保持为 `/rss.xml`，并继续生成站点地图。Cloudflare 部署配置位于 `wrangler.jsonc`；生产部署由私有内容仓库的工作流负责。
 
-## Technology
+## 技术栈
 
-- Astro 6 and strict TypeScript
+- Astro 6 与严格模式 TypeScript
 - Tailwind CSS 4
-- Markdown and MDX content collections
-- Cloudflare Workers adapter
+- Markdown 与 MDX 内容集合
+- Cloudflare Workers 适配器
 - pnpm 11.3.0
