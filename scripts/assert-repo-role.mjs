@@ -6,12 +6,11 @@ import { resolve } from 'node:path';
 
 const EXPECTED_ROLE = 'engine';
 const EXPECTED_REPOSITORY = 'dyan-premeq/Saki-For-BlogPremeq';
-const EXPECTED_DIRECTORY = '~/Projects/saki-astro';
 const root = realpathSync(resolve(process.cwd()));
 
 function fail(message) {
 	console.error(`Repository identity check failed: ${message}`);
-	console.error(`Run this command from the website engine repository at ${EXPECTED_DIRECTORY}.`);
+	console.error('Run this command from the website engine repository root.');
 	process.exit(1);
 }
 
