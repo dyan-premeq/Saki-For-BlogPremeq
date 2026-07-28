@@ -78,8 +78,7 @@ BLOG_CONTENT_DIR=../blog BLOG_INCLUDE_DRAFTS=true pnpm dev
 
 ## 技术栈
 
-- Astro 6 与严格模式 TypeScript
+- Astro 6 / TypeScript
 - Tailwind CSS 4
-- Markdown 与 MDX 内容集合
+- Markdown / MDX 
 - Cloudflare Workers 适配器
-- pnpm 11.3.0
