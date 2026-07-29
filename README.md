@@ -83,12 +83,6 @@ pnpm test:smoke
 
 `build:clean` 通过 Astro 的 `--force` 选项清理内容缓存并生成 Cloudflare 产物。`serve:built` 只预览已经存在的产物，不会隐式构建；`test:smoke` 同样不会构建，Playwright 会通过该只读预览命令启动本地服务器。`pnpm preview` 是“清理构建一次后预览”的便捷组合命令。
 
-在 Ubuntu CI 中，浏览器运行时通过以下命令连同系统依赖一起安装：
-
-```sh
-pnpm exec playwright install --with-deps chromium
-```
-
 仅开发引擎时，可以直接使用示例内容，无需检出任何私有内容。需要在本地结合内容仓库写作时，请指定内容仓库并启用草稿：
 
 ```sh
