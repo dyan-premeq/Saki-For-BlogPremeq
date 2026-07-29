@@ -1,3 +1,5 @@
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
@@ -18,7 +20,10 @@ const isoDate = z
 	});
 
 const blog = defineCollection({
-	loader: glob({ base: `${BLOG_CONTENT_DIR}/posts`, pattern: '*/index.{md,mdx}' }),
+	loader: glob({
+		base: pathToFileURL(resolve(BLOG_CONTENT_DIR, 'posts')),
+		pattern: '*/index.{md,mdx}',
+	}),
 	schema: ({ image }) =>
 		z
 			.object({
@@ -35,7 +40,10 @@ const blog = defineCollection({
 });
 
 const about = defineCollection({
-	loader: glob({ base: `${BLOG_CONTENT_DIR}/pages`, pattern: 'about.{md,mdx}' }),
+	loader: glob({
+		base: pathToFileURL(resolve(BLOG_CONTENT_DIR, 'pages')),
+		pattern: 'about.{md,mdx}',
+	}),
 	schema: ({ image }) =>
 		z
 			.object({
