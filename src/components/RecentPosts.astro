@@ -1,0 +1,323 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import FormattedDate from "./FormattedDate.astro";
+
+interface RecentPost {
+  title: string;
+  description: string;
+  href: string;
+  image: ImageMetadata;
+  date: Date;
+  index: number;
+}
+
+interface Props {
+  posts: RecentPost[];
+}
+
+const { posts } = Astro.props;
+---
+
+<section class="discovery-section" aria-labelledby="discovery-title">
+  <div class="section-heading discovery-heading">
+    <p>Discovery</p>
+    <h2 id="discovery-title" class="font-display">Recent Articles</h2>
+  </div>
+  <div class="post-flow">
+    {
+      posts.map((post) => (
+        <article class="post-row" style={`--delay: ${post.index * 80}ms`}>
+          <div class="post-copy">
+            <p class="post-date font-meta">
+              <FormattedDate date={post.date} />
+            </p>
+            <a class="post-title font-display" href={post.href}>
+              {post.title}
+            </a>
+            <p class="post-description font-prose">{post.description}</p>
+            <a
+              class="post-more"
+              href={post.href}
+              aria-label={`Read ${post.title}`}
+            >
+              Read more
+            </a>
+          </div>
+          <a class="post-thumb" href={post.href} aria-label={post.title}>
+            <Image
+              src={post.image}
+              alt=""
+              width={860}
+              height={520}
+              widths={[360, 540, 720, 960]}
+              sizes="(max-width: 860px) calc(100vw - 28px), (max-width: 996px) calc(57vw - 21px), 547px"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        </article>
+      ))
+    }
+    <a
+      class="archive-more font-display"
+      href="/post/"
+      aria-label="View blog archive">&gt;</a
+    >
+  </div>
+</section>
+
+<script>
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const postRows = document.querySelectorAll(".post-row");
+
+  if (
+    "IntersectionObserver" in window &&
+    postRows.length > 0 &&
+    !prefersReducedMotion
+  ) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            entry.target.classList.remove("is-reveal-pending");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        rootMargin: "0px 0px -10% 0px",
+        threshold: 0.22,
+      },
+    );
+
+    postRows.forEach((row) => {
+      observer.observe(row);
+      row.classList.add("is-reveal-pending");
+    });
+  }
+</script>
+
+<style>
+  .discovery-section {
+    width: min(var(--width-content), calc(100% - 36px));
+    margin: 74px auto 0;
+  }
+
+  .section-heading {
+    margin-bottom: 20px;
+  }
+
+  .section-heading p {
+    margin: 0 0 4px;
+    color: var(--color-accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .section-heading h2 {
+    margin: 0;
+    color: #303030;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+  }
+
+  .post-flow {
+    display: grid;
+    gap: 28px;
+  }
+
+  .archive-more {
+    place-self: center;
+    display: grid;
+    width: 54px;
+    height: 54px;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 46%, transparent);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 14px 32px -24px rgba(254, 150, 0, 0.8);
+    color: var(--color-accent);
+    font-size: 28px;
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .archive-more:hover,
+  .archive-more:focus-visible {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-paper);
+    transform: translateY(-2px);
+  }
+
+  .archive-more:focus-visible {
+    outline: 2px solid rgba(254, 150, 0, 0.42);
+    outline-offset: 4px;
+  }
+
+  .post-row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.86fr) minmax(320px, 1.14fr);
+    min-height: 290px;
+    overflow: hidden;
+    border: 1px solid rgba(20, 20, 20, 0.08);
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 18px 50px -42px rgba(0, 0, 0, 0.75);
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.68s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.68s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.25s ease;
+    transition-delay: 0ms, 0ms, 0ms;
+  }
+
+  .post-row:nth-child(even) {
+    grid-template-columns: minmax(320px, 1.14fr) minmax(0, 0.86fr);
+  }
+
+  .post-row:nth-child(even) .post-thumb {
+    order: -1;
+  }
+
+  .post-row.is-reveal-pending {
+    opacity: 0;
+    transform: translateY(72px);
+    will-change: opacity, transform;
+  }
+
+  .post-row.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: var(--delay), var(--delay), 0ms;
+    will-change: auto;
+  }
+
+  .post-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px clamp(22px, 5vw, 42px);
+  }
+
+  .post-date {
+    margin: 0 0 12px;
+    color: #888;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .post-title {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    color: #383838;
+    font-size: clamp(1.45rem, 3vw, 2.1rem);
+    font-weight: 700;
+    line-height: 1.16;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .post-title:hover {
+    color: var(--color-accent);
+  }
+
+  .post-description {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 18px 0 0;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    color: rgba(0, 0, 0, 0.58);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .post-more {
+    align-self: flex-start;
+    margin-top: 24px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--color-accent);
+    color: #444;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .post-thumb {
+    position: relative;
+    display: block;
+    aspect-ratio: 43 / 26;
+    overflow: hidden;
+    background: #111;
+  }
+
+  .post-thumb :global(img) {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    object-fit: cover;
+    transition:
+      transform 0.55s ease,
+      filter 0.55s ease;
+  }
+
+  .post-row:hover .post-thumb :global(img) {
+    filter: saturate(1.04);
+    transform: scale(1.06);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .post-row,
+    .post-row.is-reveal-pending,
+    .archive-more,
+    .post-thumb :global(img) {
+      transition: none;
+    }
+
+    .post-row,
+    .post-row.is-reveal-pending {
+      opacity: 1;
+      transform: none;
+      will-change: auto;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .discovery-section {
+      width: min(100% - 28px, var(--width-prose));
+    }
+
+    .post-row,
+    .post-row:nth-child(even) {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      box-shadow: none;
+    }
+
+    .post-thumb {
+      order: -1;
+    }
+  }
+</style>

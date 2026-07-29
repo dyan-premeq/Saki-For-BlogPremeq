@@ -10,11 +10,15 @@
     "check:repo": "node ./scripts/assert-repo-role.mjs",
     "dev": "pnpm run check:repo && astro dev",
     "build": "pnpm run check:repo && astro build",
-    "preview": "pnpm run build && wrangler dev",
+    "build:clean": "pnpm run check:repo && astro build --force",
+    "serve:built": "pnpm run check:repo && astro preview --host 127.0.0.1 --port 4321",
+    "preview": "pnpm run build:clean && pnpm run serve:built",
     "astro": "astro",
     "check": "pnpm run check:repo && astro check",
     "format:check": "pnpm run check:repo && prettier --check .",
     "format:write": "pnpm run check:repo && prettier --write .",
+    "test:smoke": "pnpm run check:repo && playwright test",
+    "verify": "pnpm run format:check && pnpm run check && pnpm run build:clean && pnpm run test:smoke",
     "generate-types": "pnpm run check:repo && wrangler types",
     "deploy": "pnpm run build && wrangler deploy"
   },
@@ -26,7 +30,6 @@
     "@shikijs/transformers": "^3.22.0",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^6.3.3",
-    "playwright": "^1.60.0",
     "sharp": "^0.34.3",
     "tailwindcss": "^4.1.18",
     "yaml": "^2.9.0"
@@ -34,6 +37,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@tailwindcss/typography": "^0.5.19",
+    "playwright": "^1.60.0",
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^6.0.3",

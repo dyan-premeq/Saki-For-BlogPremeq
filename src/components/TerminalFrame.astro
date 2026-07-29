@@ -1,0 +1,87 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+if (typeof title !== "string" || title.trim().length === 0) {
+  throw new TypeError("TerminalFrame requires a non-empty title.");
+}
+
+const frameTitle = title.trim();
+---
+
+<figure class="terminal-frame not-prose font-code" aria-label={frameTitle}>
+  <figcaption class="terminal-frame__title font-meta">{frameTitle}</figcaption>
+  <div class="terminal-frame__content">
+    <slot />
+  </div>
+</figure>
+
+<style>
+  .terminal-frame {
+    margin: 2rem 0;
+    overflow: hidden;
+    border: 1px solid
+      color-mix(in srgb, var(--color-accent) 42%, rgb(var(--gray-dark)));
+    border-radius: 0.9rem;
+    background: color-mix(in srgb, rgb(var(--black)) 96%, var(--color-paper));
+    box-shadow: 0 1rem 2.5rem
+      color-mix(in srgb, rgb(var(--black)) 24%, transparent);
+    color: var(--color-paper);
+  }
+
+  .terminal-frame__title {
+    margin: 0;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--color-accent) 26%, transparent);
+    background: color-mix(
+      in srgb,
+      rgb(var(--gray-dark)) 88%,
+      var(--color-accent)
+    );
+    color: var(--color-paper);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.045em;
+  }
+
+  .terminal-frame__content {
+    overflow-x: auto;
+    padding: 1.1rem 1.2rem;
+    font-size: 0.86rem;
+    line-height: 1.65;
+    scrollbar-color: color-mix(in srgb, var(--color-accent) 62%, transparent)
+      transparent;
+  }
+
+  .terminal-frame__content > :global(:first-child) {
+    margin-top: 0;
+  }
+
+  .terminal-frame__content > :global(:last-child) {
+    margin-bottom: 0;
+  }
+
+  .terminal-frame__content :global(p) {
+    margin: 0.35rem 0;
+    white-space: pre-wrap;
+  }
+
+  .terminal-frame__content :global(code),
+  .terminal-frame__content :global(pre) {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+  }
+
+  .terminal-frame__content :global(pre) {
+    margin: 0;
+    overflow: visible;
+    padding: 0;
+    white-space: pre;
+  }
+</style>

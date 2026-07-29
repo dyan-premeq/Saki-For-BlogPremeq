@@ -1,19 +1,73 @@
 ---
-title: 'Using MDX'
-description: 'A draft MDX entry with no engine-internal component imports.'
-pubDate: '2026-07-03'
+title: "Using MDX"
+description: "A published fixture for mapped components, multilingual type, code, and footnotes."
+pubDate: "2026-07-03"
+isDraft: false
 tags:
   - mdx
 ---
 
-This engine includes the [Astro MDX integration](https://docs.astro.build/en/guides/integrations-guide/mdx/).
+This published fixture keeps rich-content behavior deterministic without importing engine files from content.
 
-## Why MDX?
+## Multilingual typography
 
-MDX allows Markdown documents to include expressions and components. External content should import only components that it owns or stable public APIs supplied by the engine.
+<p data-font-sample="mixed">
+  {
+    "The ordinary prose role stays Latin-first while 中文内容 falls through to its CJK partner."
+  }
+</p>
 
-The default draft state keeps this entry out of production builds. Set `BLOG_INCLUDE_DRAFTS=true` with `pnpm dev` to see it locally.
+<h3 data-font-sample="display">Display role 标题</h3>
 
-## A safe expression
+<p>
+  <span data-font-sample="english" lang="en">
+    {
+      "English explicitly keeps the Latin role first, even inside multilingual prose."
+    }
+  </span>
+</p>
 
-Two plus two is {2 + 2}. This example has no fragile relative import into the engine source tree.
+<p>
+  <span data-font-sample="chinese" lang="zh-CN">
+    {"中文显式语言标注会把中文字体角色放在前面，同时保留拉丁字体作为后备。"}
+  </span>
+</p>
+
+<blockquote data-font-sample="quote">
+  <p>
+    {
+      "Quotes have their own paired role: quiet words, 安静的字句, and one shared rhythm."
+    }
+  </p>
+</blockquote>
+
+<section data-font-sample="zh-container" lang="zh-CN">
+  <h3 data-font-sample="zh-display">继承中文语言的展示标题</h3>
+  <blockquote data-font-sample="zh-quote">
+    <p>{"继承中文语言的引文角色，仍保留 Latin fallback。"}</p>
+  </blockquote>
+  <p>
+    {"行内代码也继承容器语言："}
+    <code data-font-sample="zh-code">{'const greeting = "你好";'}</code>
+  </p>
+</section>
+
+## A mapped component
+
+<TerminalFrame title="Terminal session: template foundation">
+  <p>$ pnpm check</p>
+  <p>Result: content contracts and type checks passed.</p>
+</TerminalFrame>
+
+The component above comes from the engine's literal MDX component map. The authored children remain in this document, and the frame owns its own presentation.
+
+## Server-authored code
+
+```ts
+const language = "中文 + English";
+console.log(`Stable fixture: ${language}`);
+```
+
+The code frame and its copy control exist in server HTML, while one delegated handler supplies the optional clipboard enhancement.[^contract]
+
+[^contract]: Native footnote IDs and hash destinations remain the source of truth with or without JavaScript.

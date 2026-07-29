@@ -6,101 +6,195 @@
 
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-@import "./typography.css";
 
 @theme inline {
-	--font-markdown-body: var(--font-syne), "LXGW WenKai", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
-	--font-markdown-footnote: var(--font-atkinson), sans-serif;
-	--font-markdown-quote: var(--font-tangerine), "YShi-Written", "KaiTi", "STKaiti", "SimKai", "LXGW WenKai", cursive, serif;
-	--font-markdown-heading: "Times New Roman", var(--font-liberation-serif), "Liberation Serif", Georgia, "Noto Serif", "Noto Serif CJK SC", "Songti SC", SimSun, serif;
-	--font-code-block: var(--font-jetbrains-mono), var(--font-cascadia-code), "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-ui:
+    var(--font-atkinson), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  --font-prose-latin: var(--font-syne);
+  --font-prose-cjk: "LXGW WenKai";
+  --font-display-latin: var(--font-liberation-serif);
+  --font-display-cjk: "LXGW Heart Serif";
+  --font-quote-latin: var(--font-tangerine);
+  --font-quote-cjk: "YShi-Written";
+  --font-meta:
+    var(--font-atkinson), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  --font-code:
+    var(--font-jetbrains-mono), var(--font-cascadia-code), "Cascadia Code",
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo, "Sarasa Mono SC",
+    "Microsoft YaHei", monospace;
 }
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
+  --color-link: #2337ff;
+  --color-link-strong: #000d8a;
+  --color-accent: #fe9600;
+  --color-paper: #fffaf3;
+  --width-prose: 720px;
+  --width-content: 960px;
+  --black: 15, 18, 25;
+  --gray: 96, 115, 159;
+  --gray-light: 229, 233, 240;
+  --gray-dark: 34, 41, 57;
+  --gray-gradient: rgba(var(--gray-light), 50%), #fff;
+  --box-shadow:
+    0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
+    0 16px 32px rgba(var(--gray), 33%);
 }
+
+.font-ui {
+  --font-role-latin: var(--font-atkinson);
+  --font-role-cjk:
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Source Han Sans SC";
+  --font-role-fallback: sans-serif;
+  font-family: var(--font-role-stack);
+}
+
+.font-prose {
+  --font-role-latin: var(--font-prose-latin);
+  --font-role-cjk: var(--font-prose-cjk);
+  --font-role-fallback:
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Source Han Sans SC", sans-serif;
+  font-family: var(--font-role-stack);
+}
+
+.font-display {
+  --font-role-latin: var(--font-display-latin);
+  --font-role-cjk: var(--font-display-cjk);
+  --font-role-fallback:
+    "Liberation Serif", Georgia, "Noto Serif", "Noto Serif CJK SC", "Songti SC",
+    SimSun, serif;
+  font-family: var(--font-role-stack);
+}
+
+.font-quote {
+  --font-role-latin: var(--font-quote-latin);
+  --font-role-cjk: var(--font-quote-cjk);
+  --font-role-fallback:
+    "KaiTi", "STKaiti", "SimKai", "LXGW WenKai", cursive, serif;
+  font-family: var(--font-role-stack);
+}
+
+.font-meta {
+  --font-role-latin: var(--font-atkinson);
+  --font-role-cjk:
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Source Han Sans SC";
+  --font-role-fallback: sans-serif;
+  font-family: var(--font-role-stack);
+}
+
+.font-code {
+  --font-role-latin:
+    var(--font-jetbrains-mono), var(--font-cascadia-code), "Cascadia Code",
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo;
+  --font-role-cjk: "Sarasa Mono SC", "Microsoft YaHei";
+  --font-role-fallback: monospace;
+  font-family: var(--font-role-stack);
+}
+
+body,
+body :where(*) {
+  --font-role-stack:
+    var(--font-role-latin, var(--font-atkinson)),
+    var(--font-role-cjk, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei"),
+    var(--font-role-fallback, sans-serif);
+}
+
+body:lang(en),
+body :lang(en) {
+  --font-role-stack:
+    var(--font-role-latin, var(--font-atkinson)),
+    var(--font-role-cjk, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei"),
+    var(--font-role-fallback, sans-serif);
+  font-family: var(--font-role-stack);
+}
+
+body:lang(zh),
+body :lang(zh) {
+  --font-role-stack:
+    var(--font-role-cjk, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei"),
+    var(--font-role-latin, var(--font-atkinson)),
+    var(--font-role-fallback, sans-serif);
+  font-family: var(--font-role-stack);
+}
+
 body {
-	font-family: var(--font-atkinson);
-	margin: 0;
-	padding: 0;
-	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
-	word-wrap: break-word;
-	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.7;
+  --font-role-latin: var(--font-atkinson);
+  --font-role-cjk:
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Source Han Sans SC";
+  --font-role-fallback: sans-serif;
+  font-family: var(--font-role-stack);
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  background: linear-gradient(var(--gray-gradient)) no-repeat;
+  background-size: 100% 600px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  color: rgb(var(--gray-dark));
+  font-size: 20px;
+  line-height: 1.7;
 }
 body:not(.saki-home) {
-	padding-top: 72px;
+  padding-top: 72px;
 }
 main {
-	width: 720px;
-	max-width: calc(100% - 2em);
-	margin: auto;
-	padding: 3em 1em;
+  width: var(--width-prose);
+  max-width: calc(100% - 2em);
+  margin: auto;
+  padding: 3em 1em;
 }
 strong,
 b {
-	font-weight: 700;
+  font-weight: 700;
 }
 a {
-	color: var(--accent);
+  color: var(--color-link);
 }
 a:hover {
-	color: var(--accent);
+  color: var(--color-link);
 }
 textarea {
-	width: 100%;
-	font-size: 16px;
+  width: 100%;
+  font-size: 16px;
 }
 input {
-	font-size: 16px;
+  font-size: 16px;
 }
 table {
-	width: 100%;
-}
-.prose img {
-	max-width: 100%;
-	height: auto;
-	border-radius: 8px;
+  width: 100%;
 }
 @media (max-width: 720px) {
-	body {
-		font-size: 18px;
-	}
-	body:not(.saki-home) {
-		padding-top: 64px;
-	}
-	main {
-		padding: 1em;
-	}
+  body {
+    font-size: 18px;
+  }
+  body:not(.saki-home) {
+    padding-top: 64px;
+  }
+  main {
+    padding: 1em;
+  }
 }
 
 .sr-only {
-	border: 0;
-	padding: 0;
-	margin: 0;
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
-	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
-	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
-	white-space: nowrap;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  /* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
+  clip: rect(1px 1px 1px 1px);
+  /* maybe deprecated but we need to support legacy browsers */
+  clip: rect(1px, 1px, 1px, 1px);
+  /* modern browsers, clip-path works inwards from each corner */
+  clip-path: inset(50%);
+  /* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
+  white-space: nowrap;
 }

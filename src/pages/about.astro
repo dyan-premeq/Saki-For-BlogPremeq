@@ -1,16 +1,19 @@
 ---
-import { getEntry, render } from 'astro:content';
-import AboutPage from '../layouts/AboutPage.astro';
+import { getEntry, render } from "astro:content";
+import { contentComponents } from "../content-components";
+import ProsePageLayout from "../layouts/ProsePageLayout.astro";
 
-const about = await getEntry('about', 'about');
+const about = await getEntry("about", "about");
 
 if (!about) {
-	throw new Error('Missing required content entry: pages/about.md in BLOG_CONTENT_DIR');
+  throw new Error(
+    "Missing required content entry: pages/about.md in BLOG_CONTENT_DIR",
+  );
 }
 
 const { Content } = await render(about);
 ---
 
-<AboutPage {...about.data}>
-	<Content />
-</AboutPage>
+<ProsePageLayout {...about.data}>
+  <Content components={contentComponents} />
+</ProsePageLayout>

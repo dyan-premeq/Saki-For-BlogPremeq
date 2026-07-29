@@ -1,0 +1,283 @@
+---
+import { SITE } from "../config/site";
+
+interface Props {
+  latestHref: string;
+  latestTitle: string;
+}
+
+const { latestHref, latestTitle } = Astro.props;
+---
+
+<section class="home-hero" aria-label="站点简介">
+  <div class="hero-media" aria-hidden="true">
+    <img
+      src={SITE.homeHero}
+      alt=""
+      width="1448"
+      height="1086"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </div>
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-wash" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <p class="hero-copy">{SITE.description}</p>
+  </div>
+
+  <a class="hero-latest" href={latestHref}>
+    <span>Latest</span>
+    <strong>{latestTitle}</strong>
+  </a>
+</section>
+
+<script>
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const hero = document.querySelector(".home-hero");
+  const heroImage = hero?.querySelector(".hero-media img");
+  const heroShade = hero?.querySelector(".hero-shade");
+  const heroGrid = hero?.querySelector(".hero-grid");
+  const heroWash = hero?.querySelector(".hero-wash");
+  const heroInner = hero?.querySelector(".hero-inner");
+  const heroLatest = hero?.querySelector(".hero-latest");
+  const clamp = (value: number, min: number, max: number) =>
+    Math.min(Math.max(value, min), max);
+
+  if (
+    hero instanceof HTMLElement &&
+    heroImage instanceof HTMLImageElement &&
+    heroShade instanceof HTMLElement &&
+    heroGrid instanceof HTMLElement &&
+    heroWash instanceof HTMLElement &&
+    heroInner instanceof HTMLElement &&
+    heroLatest instanceof HTMLElement &&
+    !prefersReducedMotion
+  ) {
+    let ticking = false;
+    let scrollDistance = 1;
+
+    const measureCover = () => {
+      scrollDistance = Math.max(hero.clientHeight * 0.72, 1);
+    };
+
+    const updateCover = () => {
+      const progress = clamp(window.scrollY / scrollDistance, 0, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      const contentOpacity = Math.max(0, 1 - progress * 1.45).toFixed(3);
+      const contentTransform = `translate3d(0, ${(-progress * 46).toFixed(1)}px, 0)`;
+
+      heroImage.style.transform = `scale(${(1.03 + eased * 0.035).toFixed(4)})`;
+      heroShade.style.opacity = Math.max(0.36, 1 - eased * 0.58).toFixed(3);
+      heroGrid.style.opacity = Math.max(0.06, 0.32 - eased * 0.24).toFixed(3);
+      heroWash.style.opacity = (eased * 0.64).toFixed(3);
+      heroInner.style.opacity = contentOpacity;
+      heroInner.style.transform = contentTransform;
+      heroLatest.style.opacity = contentOpacity;
+      heroLatest.style.transform = contentTransform;
+    };
+
+    const requestCoverUpdate = () => {
+      if (ticking) return;
+
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        updateCover();
+        ticking = false;
+      });
+    };
+
+    const handleResize = () => {
+      measureCover();
+      requestCoverUpdate();
+    };
+
+    measureCover();
+    requestCoverUpdate();
+    window.addEventListener("scroll", requestCoverUpdate, { passive: true });
+    window.addEventListener("resize", handleResize);
+  }
+</script>
+
+<style>
+  .home-hero {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    isolation: isolate;
+    display: grid;
+    height: 100vh;
+    height: 100svh;
+    min-height: 620px;
+    place-items: center;
+    overflow: hidden;
+    background: #101014;
+  }
+
+  .home-hero:focus-within {
+    z-index: 11;
+  }
+
+  .hero-media,
+  .hero-shade,
+  .hero-grid,
+  .hero-wash {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero-media {
+    z-index: -3;
+  }
+
+  .hero-media img {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    filter: saturate(0.86) contrast(1.08);
+    object-fit: cover;
+    object-position: center top;
+    transform: scale(1.03);
+  }
+
+  .hero-shade {
+    z-index: -2;
+    background:
+      radial-gradient(
+        circle at 52% 46%,
+        rgba(254, 150, 0, 0.2),
+        transparent 30%
+      ),
+      linear-gradient(180deg, rgba(10, 10, 14, 0.25), rgba(10, 10, 14, 0.76));
+    opacity: 1;
+  }
+
+  .hero-grid {
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(
+      180deg,
+      transparent,
+      #000 22%,
+      #000 72%,
+      transparent
+    );
+    opacity: 0.32;
+  }
+
+  .hero-wash {
+    z-index: 1;
+    background: rgb(var(--background));
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    width: min(860px, calc(100% - 32px));
+    padding-top: 48px;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 16px 40px rgba(0, 0, 0, 0.36);
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .hero-copy {
+    max-width: 640px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    line-height: 1.8;
+  }
+
+  .hero-latest {
+    position: absolute;
+    right: clamp(18px, 5vw, 84px);
+    bottom: 64px;
+    z-index: 2;
+    max-width: 280px;
+    padding-left: 18px;
+    border-left: 2px solid var(--color-accent);
+    color: #fff;
+    text-align: left;
+    text-decoration: none;
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .hero-latest:focus-visible {
+    opacity: 1 !important;
+    outline: 2px solid var(--color-accent);
+    outline-offset: 0.55rem;
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  .hero-latest span {
+    display: block;
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.64);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+
+  .hero-latest strong {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.45;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-media img {
+      transform: none;
+    }
+
+    .hero-inner,
+    .hero-latest {
+      opacity: 1;
+      transform: none;
+    }
+
+    .hero-wash {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .home-hero {
+      height: 100vh;
+      height: 100svh;
+      min-height: 520px;
+    }
+
+    .hero-inner {
+      padding-top: 72px;
+    }
+
+    .hero-latest {
+      display: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .hero-copy {
+      font-size: 0.98rem;
+    }
+  }
+</style>

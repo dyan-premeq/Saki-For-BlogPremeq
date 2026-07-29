@@ -1,0 +1,136 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import FormattedDate from "../components/FormattedDate.astro";
+import "../styles/typography.css";
+import SiteLayout from "./SiteLayout.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate?: Date;
+  updatedDate?: Date;
+  heroImage?: ImageMetadata;
+  lead?: string;
+}
+
+const { title, description, pubDate, updatedDate, heroImage, lead } =
+  Astro.props;
+
+const proseFontLink =
+  '<link href="https://fontsapi.zeoseven.com/802/main/result.css" onload="this.onload=null;this.rel=\'stylesheet\'" rel="preload" as="style" crossorigin /><noscript><link rel="stylesheet" href="https://fontsapi.zeoseven.com/802/main/result.css" /></noscript>';
+---
+
+<SiteLayout
+  title={title}
+  description={description}
+  image={heroImage}
+  bodyClass="saki-prose-body"
+>
+  <Fragment slot="head">
+    <Fragment set:html={proseFontLink} />
+    <slot name="head" />
+  </Fragment>
+
+  <main class="prose-page-main !m-0 !w-full !max-w-full !p-0">
+    <article class="pb-16">
+      {
+        heroImage && (
+          <div class="prose-page-cover mx-auto aspect-[16/9] w-full max-w-[1020px] overflow-hidden shadow-[var(--box-shadow)]">
+            <Image
+              width={heroImage.width}
+              height={heroImage.height}
+              src={heroImage}
+              alt=""
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              class="block h-full w-full rounded-none object-cover"
+            />
+          </div>
+        )
+      }
+
+      <div
+        class="prose-page-shell relative z-[1] mx-auto max-w-[calc(100%_-_2em)] p-4"
+      >
+        <header class="prose-page-header mb-4 py-4 text-center leading-none">
+          {
+            (pubDate || updatedDate) && (
+              <div class="prose-page-dates font-meta mb-2 text-[rgb(var(--gray))]">
+                {pubDate && <FormattedDate date={pubDate} />}
+                {updatedDate && (
+                  <div class="italic">
+                    Last updated on <FormattedDate date={updatedDate} />
+                  </div>
+                )}
+              </div>
+            )
+          }
+          <h1 class="prose-page-title font-display">{title}</h1>
+          <hr />
+          {
+            lead && (
+              <aside
+                class="post-description-note font-quote mx-auto mt-8 max-w-[calc(100%_-_2em)] px-5 py-4 text-left sm:max-w-[var(--width-prose)] sm:px-6 sm:py-5"
+                aria-label="Post description"
+              >
+                <p>{lead}</p>
+              </aside>
+            )
+          }
+        </header>
+
+        <div class="prose mx-auto max-w-full">
+          <slot />
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <script>
+    import "../scripts/typography";
+  </script>
+</SiteLayout>
+
+<style>
+  .prose-page-main {
+    background: var(--color-paper);
+  }
+
+  .prose-page-shell {
+    width: var(--width-prose);
+  }
+
+  .prose-page-title {
+    margin: 0 0 0.5rem;
+    color: rgb(var(--black));
+    font-size: 3.052em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .prose-page-header hr {
+    border: 0;
+    border-top: 1px solid rgb(var(--gray-light));
+  }
+
+  .post-description-note {
+    border-left: 4px solid var(--color-accent);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-accent) 10%, transparent),
+      transparent 72%
+    );
+    color: color-mix(in srgb, rgb(var(--gray-dark)) 84%, #7b4a2a);
+    font-size: 1.05em;
+    font-size-adjust: 0.45;
+    font-style: normal;
+    line-height: 1.75;
+  }
+
+  .post-description-note p {
+    margin: 0;
+  }
+</style>

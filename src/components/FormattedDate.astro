@@ -1,20 +1,13 @@
 ---
-import { SITE } from '../site_config';
+import { formatDate } from "../utils/date";
 
 interface Props {
-	date: Date;
+  date: Date;
 }
 
 const { date } = Astro.props;
 ---
 
 <time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString(SITE.lang, {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-			timeZone: SITE.timezone,
-		})
-	}
+  {formatDate(date)}
 </time>

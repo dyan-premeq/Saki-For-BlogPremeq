@@ -1,175 +1,170 @@
 ---
-import { SITE } from '../site_config';
-import HeaderLink from './HeaderLink.astro';
+import { SITE } from "../config/site";
+import HeaderLink from "./HeaderLink.astro";
+
+const isHome = Astro.url.pathname === "/";
 ---
 
-<header class="site-header">
-	<nav class="site-nav" aria-label="Primary navigation">
-		<a class="brand" href="/" aria-label={`${SITE.title} home`}>
-			<!-- <span class="brand-mark" aria-hidden="true">S</span> -->
-			<span class="brand-name">{SITE.title}</span>
-		</a>
-		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/post">Post</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
-		</div>
-		<a class="rss-link" href="/rss.xml">RSS</a>
-	</nav>
+<header class:list={["site-header", { "is-home": isHome }]}>
+  <nav class="site-nav" aria-label="Primary navigation">
+    <a class="brand" href="/" aria-label={`${SITE.title} home`}>
+      <span class="brand-name">{SITE.title}</span>
+    </a>
+    <div class="internal-links">
+      <HeaderLink href="/">Home</HeaderLink>
+      <HeaderLink href="/post">Post</HeaderLink>
+      <HeaderLink href="/about">About</HeaderLink>
+    </div>
+    <a class="rss-link" href="/rss.xml">RSS</a>
+  </nav>
 </header>
 
 <script>
-	const header = document.querySelector('.site-header');
+  const header = document.querySelector(".site-header");
 
-	const updateHeaderState = () => {
-		header?.classList.toggle('is-scrolled', window.scrollY > 0);
-	};
+  const updateHeaderState = () => {
+    header?.classList.toggle("is-scrolled", window.scrollY > 0);
+  };
 
-	updateHeaderState();
-	window.addEventListener('scroll', updateHeaderState, { passive: true });
+  updateHeaderState();
+  window.addEventListener("scroll", updateHeaderState, { passive: true });
 </script>
 
 <style>
-	.site-header {
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: 1000;
-		width: 100%;
-		border-bottom: 1px solid transparent;
-		background: transparent;
-		backdrop-filter: none;
-		transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-	}
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    transition:
+      background 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
 
-	.site-header:hover,
-	.site-header:focus-within,
-	.site-header.is-scrolled {
-		border-color: rgba(0, 0, 0, 0.06);
-		background: rgba(255, 255, 255, 0.94);
-		backdrop-filter: blur(18px);
-		box-shadow: 0 18px 44px -34px rgba(0, 0, 0, 0.5);
-	}
+  .site-header:hover,
+  .site-header:focus-within,
+  .site-header.is-scrolled {
+    border-color: rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 18px 44px -34px rgba(0, 0, 0, 0.5);
+  }
 
-	@media (prefers-reduced-motion: reduce) {
-		.site-header {
-			transition: none;
-		}
-	}
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: none;
+    }
+  }
 
-	.site-nav {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		width: min(1120px, calc(100% - 36px));
-		height: 72px;
-		margin: 0 auto;
-	}
+  .site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(1120px, calc(100% - 36px));
+    height: 72px;
+    margin: 0 auto;
+  }
 
-	:global(.site-header a) {
-		color: #3c3c3c;
-		text-decoration: none;
-	}
+  :global(.site-header a) {
+    color: #3c3c3c;
+    text-decoration: none;
+  }
 
-	.brand {
-		display: inline-flex;
-		align-items: center;
-		gap: 10px;
-		min-width: 0;
-		font-weight: 700;
-		letter-spacing: 0.02em;
-	}
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
 
-	.brand-mark {
-		display: grid;
-		width: 32px;
-		height: 32px;
-		place-items: center;
-		background: #fe9600;
-		clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-		color: #1f1305;
-		font-family: Georgia, 'Times New Roman', serif;
-		font-size: 20px;
-		font-weight: 700;
-		line-height: 1;
-	}
+  .brand-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-	.brand-name {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
+  .internal-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(18px, 4vw, 34px);
+    margin-left: auto;
+  }
 
-	.internal-links {
-		display: flex;
-		align-items: center;
-		gap: clamp(18px, 4vw, 34px);
-		margin-left: auto;
-	}
+  :global(.site-header .internal-links a),
+  .rss-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    color: #404040;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+  }
 
-	:global(.site-header .internal-links a),
-	.rss-link {
-		position: relative;
-		display: inline-flex;
-		align-items: center;
-		min-height: 42px;
-		color: #404040;
-		font-size: 13px;
-		font-weight: 700;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		transition: color 0.2s ease;
-	}
+  :global(.site-header .internal-links a::after),
+  .rss-link::after {
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+    left: 0;
+    height: 2px;
+    background: var(--color-accent);
+    content: "";
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.22s ease;
+  }
 
-	:global(.site-header .internal-links a::after),
-	.rss-link::after {
-		position: absolute;
-		right: 0;
-		bottom: 2px;
-		left: 0;
-		height: 2px;
-		background: #fe9600;
-		content: '';
-		transform: scaleX(0);
-		transform-origin: left;
-		transition: transform 0.22s ease;
-	}
+  :global(.site-header .internal-links a:hover),
+  :global(.site-header .internal-links a.active),
+  .rss-link:hover {
+    color: #696969;
+  }
 
-	:global(.site-header .internal-links a:hover),
-	:global(.site-header .internal-links a.active),
-	.rss-link:hover {
-		color: #696969;
-	}
+  :global(.site-header .internal-links a:hover::after),
+  :global(.site-header .internal-links a.active::after),
+  .rss-link:hover::after {
+    transform: scaleX(1);
+  }
 
-	:global(.site-header .internal-links a:hover::after),
-	:global(.site-header .internal-links a.active::after),
-	.rss-link:hover::after {
-		transform: scaleX(1);
-	}
+  .rss-link {
+    margin-left: clamp(20px, 5vw, 54px);
+    color: #404040;
+  }
 
-	.rss-link {
-		margin-left: clamp(20px, 5vw, 54px);
-		color: #404040;
-	}
+  :global(
+    .site-header.is-home:not(.is-scrolled):not(:hover):not(:focus-within) a
+  ) {
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.72);
+  }
 
-	@media (max-width: 720px) {
-		.site-nav {
-			width: min(100% - 28px, 640px);
-			height: 64px;
-		}
+  @media (max-width: 720px) {
+    .site-nav {
+      width: min(100% - 28px, 640px);
+      height: 64px;
+    }
 
-		.internal-links {
-			gap: 16px;
-		}
+    .internal-links {
+      gap: 16px;
+    }
 
-		.brand-name,
-		.rss-link {
-			display: none;
-		}
+    .brand-name,
+    .rss-link {
+      display: none;
+    }
 
-		:global(.site-header .internal-links a) {
-			font-size: 12px;
-			letter-spacing: 0.08em;
-		}
-	}
+    :global(.site-header .internal-links a) {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+  }
 </style>

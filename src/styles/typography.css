@@ -1,416 +1,550 @@
+@reference "./global.css";
+
 .prose {
-	--tw-prose-body: rgb(var(--gray-dark));
-	--tw-prose-headings: rgb(var(--black));
-	--tw-prose-lead: rgb(var(--gray));
-	--tw-prose-links: var(--accent);
-	--tw-prose-bold: rgb(var(--black));
-	--tw-prose-counters: rgb(var(--gray));
-	--tw-prose-bullets: color-mix(in srgb, #fe9600 58%, rgb(var(--gray)));
-	--tw-prose-hr: rgb(var(--gray-light));
-	--tw-prose-quotes: rgb(var(--gray-dark));
-	--tw-prose-quote-borders: #fe9600;
-	--tw-prose-captions: rgb(var(--gray));
-	--tw-prose-code: rgb(var(--gray-dark));
-	--tw-prose-pre-code: rgb(var(--gray-dark));
-	--tw-prose-pre-bg: #f8f8f8;
-	--tw-prose-th-borders: color-mix(in srgb, #fe9600 26%, rgb(var(--gray-light)));
-	--tw-prose-td-borders: rgb(var(--gray-light));
-	--prose-accent: #fe9600;
-	--prose-code-bg: color-mix(in srgb, var(--prose-accent) 10%, transparent);
-	width: 720px;
-	color: rgb(var(--gray-dark));
-	font-family: var(--font-markdown-body);
-	font-size: 0.95em;
-	line-height: 1.8;
+  --font-role-latin: var(--font-prose-latin);
+  --font-role-cjk: var(--font-prose-cjk);
+  --font-role-fallback:
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Source Han Sans SC", sans-serif;
+  --tw-prose-body: rgb(var(--gray-dark));
+  --tw-prose-headings: rgb(var(--black));
+  --tw-prose-lead: rgb(var(--gray));
+  --tw-prose-links: var(--color-link);
+  --tw-prose-bold: rgb(var(--black));
+  --tw-prose-counters: rgb(var(--gray));
+  --tw-prose-bullets: color-mix(
+    in srgb,
+    var(--color-accent) 58%,
+    rgb(var(--gray))
+  );
+  --tw-prose-hr: rgb(var(--gray-light));
+  --tw-prose-quotes: rgb(var(--gray-dark));
+  --tw-prose-quote-borders: var(--color-accent);
+  --tw-prose-captions: rgb(var(--gray));
+  --tw-prose-code: rgb(var(--gray-dark));
+  --tw-prose-pre-code: rgb(var(--gray-dark));
+  --tw-prose-pre-bg: #f8f8f8;
+  --tw-prose-th-borders: color-mix(
+    in srgb,
+    var(--color-accent) 26%,
+    rgb(var(--gray-light))
+  );
+  --tw-prose-td-borders: rgb(var(--gray-light));
+  --prose-code-bg: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  width: var(--width-prose);
+  color: rgb(var(--gray-dark));
+  font-family: var(--font-role-stack);
+  font-size: 0.95em;
+  line-height: 1.8;
 }
 
-.prose :where(h1, h2, h3, h4, h5, h6) {
-	font-family: var(--font-markdown-heading);
-	letter-spacing: -0.02em;
-	line-height: 1.2;
+.prose :where(h1, h2, h3, h4, h5, h6):not(:where(.not-prose, .not-prose *)) {
+  --font-role-latin: var(--font-display-latin);
+  --font-role-cjk: var(--font-display-cjk);
+  --font-role-fallback:
+    "Liberation Serif", Georgia, "Noto Serif", "Noto Serif CJK SC", "Songti SC",
+    SimSun, serif;
+  font-family: var(--font-role-stack);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
-.prose :where(h1) {
-	font-size: 3.052em;
+.prose :where(h1):not(:where(.not-prose, .not-prose *)) {
+  font-size: 3.052em;
 }
 
-.prose :where(h2) {
-	font-size: 2.441em;
+.prose :where(h2):not(:where(.not-prose, .not-prose *)) {
+  font-size: 2.441em;
 }
 
-.prose :where(h3) {
-	font-size: 1.953em;
+.prose :where(h3):not(:where(.not-prose, .not-prose *)) {
+  font-size: 1.953em;
 }
 
-.prose :where(h4) {
-	font-size: 1.563em;
+.prose :where(h4):not(:where(.not-prose, .not-prose *)) {
+  font-size: 1.563em;
 }
 
-.prose :where(h5) {
-	font-size: 1.25em;
+.prose :where(h5):not(:where(.not-prose, .not-prose *)) {
+  font-size: 1.25em;
 }
 
-.prose :where(p) {
-	margin-bottom: 2em;
+.prose :where(p):not(:where(.not-prose, .not-prose *)) {
+  margin-bottom: 2em;
 }
 
-.prose :where(a) {
-	text-decoration-color: color-mix(in srgb, var(--accent) 36%, transparent);
-	text-underline-offset: 0.18em;
+.prose :where(a):not(:where(.not-prose, .not-prose *)) {
+  text-decoration-color: color-mix(in srgb, var(--color-link) 36%, transparent);
+  text-underline-offset: 0.18em;
 }
 
-.prose :where(a:hover) {
-	text-decoration-color: var(--accent);
+.prose :where(a:hover):not(:where(.not-prose, .not-prose *)) {
+  text-decoration-color: var(--color-link);
 }
 
-.prose :where(a[data-footnote-ref]) {
-	font-family: var(--font-markdown-footnote);
-	font-size: 0.72em;
-	font-weight: 700;
-	line-height: 1;
-	text-decoration: none;
-	text-underline-offset: 0.12em;
-	margin-left: 0.25em;
-	margin-right: 0.4em;
+.prose :where(a[data-footnote-ref]):not(:where(.not-prose, .not-prose *)) {
+  --font-role-latin: var(--font-atkinson);
+  --font-role-cjk:
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Source Han Sans SC";
+  --font-role-fallback: sans-serif;
+  font-family: var(--font-role-stack);
+  font-size: 0.72em;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  text-underline-offset: 0.12em;
+  margin-left: 0.25em;
+  margin-right: 0.4em;
 }
 
-.prose :where(a[data-footnote-ref]:hover, a[data-footnote-ref]:focus-visible) {
-	text-decoration: underline;
+.prose
+  :where(a[data-footnote-ref]:hover, a[data-footnote-ref]:focus-visible):not(
+    :where(.not-prose, .not-prose *)
+  ) {
+  text-decoration: underline;
 }
 
 .prose .markdown-footnotes {
-	margin-top: 4rem;
-	padding-top: 1.35rem;
-	border-top: 1px solid color-mix(in srgb, var(--prose-accent) 28%, rgb(var(--gray-light)));
-	color: color-mix(in srgb, rgb(var(--gray-dark)) 82%, rgb(var(--gray)));
-	font-family: var(--font-markdown-footnote);
-	font-size: 0.8em;
-	line-height: 1.65;
+  margin-top: 4rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-accent) 28%, rgb(var(--gray-light)));
+  color: color-mix(in srgb, rgb(var(--gray-dark)) 82%, rgb(var(--gray)));
+  --font-role-latin: var(--font-atkinson);
+  --font-role-cjk:
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC",
+    "Source Han Sans SC";
+  --font-role-fallback: sans-serif;
+  font-family: var(--font-role-stack);
+  font-size: 0.8em;
+  line-height: 1.65;
 }
 
 .prose .markdown-footnotes::before {
-	display: block;
-	width: 4.5rem;
-	height: 0.18rem;
-	margin-top: -1.45rem;
-	margin-bottom: 1.15rem;
-	border-radius: 999px;
-	background: linear-gradient(90deg, var(--prose-accent), color-mix(in srgb, #f9a8d4 58%, transparent));
-	content: '';
+  display: block;
+  width: 4.5rem;
+  height: 0.18rem;
+  margin-top: -1.45rem;
+  margin-bottom: 1.15rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent),
+    color-mix(in srgb, #f9a8d4 58%, transparent)
+  );
+  content: "";
 }
 
 .prose .markdown-footnotes :where(.footnotes) {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .prose .markdown-footnotes :where(ol) {
-	margin: 0;
-	padding-left: 1.35rem;
-	list-style: decimal outside;
+  margin: 0;
+  padding-left: 1.35rem;
+  list-style: decimal outside;
 }
 
 .prose .markdown-footnotes :where(li) {
-	display: list-item;
-	margin: 0.55rem 0 0;
-	padding-left: 0.15rem;
-	scroll-margin-top: 6rem;
+  display: list-item;
+  margin: 0.55rem 0 0;
+  padding-left: 0.15rem;
+  scroll-margin-top: 6rem;
 }
 
 .prose .markdown-footnotes li::marker {
-	content: normal;
-	color: color-mix(in srgb, var(--prose-accent) 72%, rgb(var(--gray)));
-	font-weight: 700;
+  content: normal;
+  color: color-mix(in srgb, var(--color-accent) 72%, rgb(var(--gray)));
+  font-weight: 700;
 }
 
 .prose .markdown-footnotes li:target,
 .prose .markdown-footnotes li.is-footnote-target-highlighted {
-	animation: footnote-target-emphasis 2.8s ease-out 1;
+  animation: footnote-target-emphasis 2.8s ease-out 1;
 }
 
-.prose :where(sup.is-footnote-reference-highlighted) {
-	animation: footnote-reference-location-emphasis 2.4s ease-out 1;
+.prose
+  :where(a[data-footnote-ref]:target):not(:where(.not-prose, .not-prose *)),
+.prose
+  :where(sup.is-footnote-reference-highlighted):not(
+    :where(.not-prose, .not-prose *)
+  ) {
+  animation: footnote-reference-location-emphasis 2.4s ease-out 1;
 }
 
 @keyframes footnote-target-emphasis {
-	0% {
-		background: color-mix(in srgb, var(--prose-accent) 14%, transparent);
-		box-shadow: inset 0.18rem 0 0 color-mix(in srgb, var(--prose-accent) 74%, #f9a8d4);
-	}
-	100% {
-		background: transparent;
-		box-shadow: inset 0.18rem 0 0 transparent;
-	}
+  0% {
+    background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+    box-shadow: inset 0.18rem 0 0
+      color-mix(in srgb, var(--color-accent) 74%, #f9a8d4);
+  }
+  100% {
+    background: transparent;
+    box-shadow: inset 0.18rem 0 0 transparent;
+  }
 }
 
 @keyframes footnote-reference-location-emphasis {
-	0% {
-		background: color-mix(in srgb, var(--prose-accent) 16%, transparent);
-		box-shadow: 0 0 0 0.18em color-mix(in srgb, var(--prose-accent) 16%, transparent);
-		outline: 1px solid color-mix(in srgb, var(--prose-accent) 52%, transparent);
-		outline-offset: 0.12em;
-	}
-	100% {
-		background: transparent;
-		box-shadow: 0 0 0 0 transparent;
-		outline-color: transparent;
-		outline-offset: 0.18em;
-	}
+  0% {
+    background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+    box-shadow: 0 0 0 0.18em
+      color-mix(in srgb, var(--color-accent) 16%, transparent);
+    outline: 1px solid color-mix(in srgb, var(--color-accent) 52%, transparent);
+    outline-offset: 0.12em;
+  }
+  100% {
+    background: transparent;
+    box-shadow: 0 0 0 0 transparent;
+    outline-color: transparent;
+    outline-offset: 0.18em;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.prose .markdown-footnotes li:target,
-	.prose .markdown-footnotes li.is-footnote-target-highlighted {
-		animation-name: footnote-target-emphasis-reduced;
-		animation-timing-function: step-end;
-	}
+  .prose .markdown-footnotes li:target,
+  .prose .markdown-footnotes li.is-footnote-target-highlighted {
+    animation-name: footnote-target-emphasis-reduced;
+    animation-timing-function: step-end;
+  }
 
-	.prose :where(sup.is-footnote-reference-highlighted) {
-		animation-name: footnote-reference-location-emphasis-reduced;
-		animation-timing-function: step-end;
-	}
+  .prose
+    :where(a[data-footnote-ref]:target):not(:where(.not-prose, .not-prose *)),
+  .prose
+    :where(sup.is-footnote-reference-highlighted):not(
+      :where(.not-prose, .not-prose *)
+    ) {
+    animation-name: footnote-reference-location-emphasis-reduced;
+    animation-timing-function: step-end;
+  }
 }
 
 @keyframes footnote-target-emphasis-reduced {
-	0%,
-	85% {
-		background: color-mix(in srgb, var(--prose-accent) 14%, transparent);
-		box-shadow: inset 0.18rem 0 0 color-mix(in srgb, var(--prose-accent) 74%, #f9a8d4);
-	}
-	100% {
-		background: transparent;
-		box-shadow: inset 0.18rem 0 0 transparent;
-	}
+  0%,
+  85% {
+    background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+    box-shadow: inset 0.18rem 0 0
+      color-mix(in srgb, var(--color-accent) 74%, #f9a8d4);
+  }
+  100% {
+    background: transparent;
+    box-shadow: inset 0.18rem 0 0 transparent;
+  }
 }
 
 @keyframes footnote-reference-location-emphasis-reduced {
-	0%,
-	85% {
-		background: color-mix(in srgb, var(--prose-accent) 16%, transparent);
-		box-shadow: 0 0 0 0.18em color-mix(in srgb, var(--prose-accent) 16%, transparent);
-		outline: 1px solid color-mix(in srgb, var(--prose-accent) 52%, transparent);
-		outline-offset: 0.12em;
-	}
-	100% {
-		background: transparent;
-		box-shadow: 0 0 0 0 transparent;
-		outline-color: transparent;
-		outline-offset: 0.18em;
-	}
+  0%,
+  85% {
+    background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+    box-shadow: 0 0 0 0.18em
+      color-mix(in srgb, var(--color-accent) 16%, transparent);
+    outline: 1px solid color-mix(in srgb, var(--color-accent) 52%, transparent);
+    outline-offset: 0.12em;
+  }
+  100% {
+    background: transparent;
+    box-shadow: 0 0 0 0 transparent;
+    outline-color: transparent;
+    outline-offset: 0.18em;
+  }
 }
 
 .prose .markdown-footnotes :where(p) {
-	margin: 0;
+  margin: 0;
 }
 
 .prose .markdown-footnotes :where(a[data-footnote-backref]) {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 1.3em;
-	min-height: 1.3em;
-	margin-left: 0.25em;
-	border-radius: 999px;
-	font-weight: 700;
-	line-height: 1;
-	text-decoration: none;
-	vertical-align: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.3em;
+  min-height: 1.3em;
+  margin-left: 0.25em;
+  border-radius: 999px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  vertical-align: 0.05em;
 }
 
-.prose .markdown-footnotes :where(a[data-footnote-backref]:hover, a[data-footnote-backref]:focus-visible) {
-	background: color-mix(in srgb, var(--prose-accent) 12%, transparent);
-	text-decoration: none;
+.prose
+  .markdown-footnotes
+  :where(
+    a[data-footnote-backref]:hover,
+    a[data-footnote-backref]:focus-visible
+  ) {
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  text-decoration: none;
 }
 
-.prose :where(blockquote) {
-	border-left: 4px solid var(--accent);
-	padding-left: 1.25rem;
-	font-family: var(--font-markdown-quote);
-	font-size: 1em;
-	font-size-adjust: 0.45;
-	font-style: normal;
+.prose :where(blockquote):not(:where(.not-prose, .not-prose *)) {
+  --font-role-latin: var(--font-quote-latin);
+  --font-role-cjk: var(--font-quote-cjk);
+  --font-role-fallback:
+    "KaiTi", "STKaiti", "SimKai", "LXGW WenKai", cursive, serif;
+  border-left: 4px solid var(--color-accent);
+  padding-left: 1.25rem;
+  font-family: var(--font-role-stack);
+  font-size: 1em;
+  font-size-adjust: 0.45;
+  font-style: normal;
 }
 
-.prose :where(hr) {
-	border-color: rgb(var(--gray-light));
+.prose :where(hr):not(:where(.not-prose, .not-prose *)) {
+  border-color: rgb(var(--gray-light));
 }
 
-.prose :where(img) {
-	border-radius: 0.75rem;
-	box-shadow: 0 12px 36px color-mix(in srgb, rgb(var(--gray)) 18%, transparent);
+.prose :where(img):not(:where(.not-prose, .not-prose *)) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 36px color-mix(in srgb, rgb(var(--gray)) 18%, transparent);
 }
 
-.prose :where(code) {
-	@apply rounded-md px-1.5 py-0.5 font-code-block text-[0.9em] break-words;
-	background: var(--prose-code-bg);
-	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--prose-accent) 16%, transparent);
-	font-weight: 400;
+.prose :where(code):not(:where(.not-prose, .not-prose *)) {
+  --font-role-latin:
+    var(--font-jetbrains-mono), var(--font-cascadia-code), "Cascadia Code",
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo;
+  --font-role-cjk: "Sarasa Mono SC", "Microsoft YaHei";
+  --font-role-fallback: monospace;
+  @apply rounded-md px-1.5 py-0.5 font-code text-[0.9em] break-words;
+  font-family: var(--font-role-stack);
+  background: var(--prose-code-bg);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--color-accent) 16%, transparent);
+  font-weight: 400;
 }
 
-.prose :where(code)::before,
-.prose :where(code)::after {
-	content: none;
+.prose :where(code):not(:where(.not-prose, .not-prose *))::before,
+.prose :where(code):not(:where(.not-prose, .not-prose *))::after {
+  content: none;
 }
 
-.prose :where(pre) {
-	@apply my-8 rounded-xl border text-sm leading-6 shadow-sm outline-offset-2;
-	border-color: color-mix(in srgb, var(--prose-accent) 22%, transparent);
-	background: var(--tw-prose-pre-bg);
-	overflow-x: auto;
-	overflow-y: hidden;
-	padding: 1.25rem 1.35rem;
+.prose :where(pre):not(:where(.not-prose, .not-prose *)) {
+  @apply my-8 rounded-xl border text-sm leading-6 shadow-sm outline-offset-2;
+  border-color: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  background: var(--tw-prose-pre-bg);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 1.25rem 1.35rem;
 }
 
-.prose :where(pre:focus-visible) {
-	outline: 2px dashed var(--prose-accent);
+.prose :where(pre:focus-visible):not(:where(.not-prose, .not-prose *)) {
+  outline: 2px dashed var(--color-accent);
 }
 
-.prose :where(pre > code) {
-	all: unset;
-	display: grid;
-	min-width: 100%;
-	overflow: visible;
-	font-family: var(--font-code-block);
-	scrollbar-color: color-mix(in srgb, var(--prose-accent) 48%, transparent) transparent;
+.prose :where(pre > code):not(:where(.not-prose, .not-prose *)) {
+  all: unset;
+  --font-role-latin:
+    var(--font-jetbrains-mono), var(--font-cascadia-code), "Cascadia Code",
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo;
+  --font-role-cjk: "Sarasa Mono SC", "Microsoft YaHei";
+  --font-role-fallback: monospace;
+  display: grid;
+  min-width: 100%;
+  overflow: visible;
+  font-family: var(--font-role-stack);
+  scrollbar-color: color-mix(in srgb, var(--color-accent) 48%, transparent)
+    transparent;
 }
 
-.prose .code-block-frame {
-	@apply relative my-8;
+.prose .code-block-frame:not(:where(.not-prose, .not-prose *)) {
+  @apply relative my-8;
 }
 
-.prose .code-block-frame > pre {
-	margin-top: 0;
-	margin-bottom: 0;
+.prose .code-block-frame:not(:where(.not-prose, .not-prose *)) > pre {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-.prose .astro-code,
-.prose .astro-code code {
-	@apply font-code-block;
+.prose .code-block-frame:not(:where(.not-prose, .not-prose *)) .astro-code,
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code
+  code {
+  --font-role-latin:
+    var(--font-jetbrains-mono), var(--font-cascadia-code), "Cascadia Code",
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo;
+  --font-role-cjk: "Sarasa Mono SC", "Microsoft YaHei";
+  --font-role-fallback: monospace;
+  @apply font-code;
+  font-family: var(--font-role-stack);
 }
 
-.prose .astro-code {
-	@apply flex;
-	background: var(--shiki-light-bg);
-	color: var(--shiki-light);
-	position: relative;
-	z-index: 2;
+.prose .code-block-frame:not(:where(.not-prose, .not-prose *)) .astro-code {
+  @apply flex;
+  background: var(--shiki-light-bg);
+  color: var(--shiki-light);
+  position: relative;
+  z-index: 2;
 }
 
-.prose .astro-code span {
-	color: var(--shiki-light);
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code
+  span {
+  color: var(--shiki-light);
 }
 
-.prose .astro-code > code {
-	@apply grid min-w-full bg-inherit p-0;
-	overflow: visible;
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code
+  > code {
+  @apply grid min-w-full bg-inherit p-0;
+  overflow: visible;
 }
 
-.prose .astro-code .line {
-	@apply inline-block min-w-full;
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code
+  .line {
+  @apply inline-block min-w-full;
 }
 
-.prose .astro-code .line.diff.add {
-	@apply relative inline-block min-w-full bg-green-400/20;
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code
+  .line.diff.add {
+  @apply relative inline-block min-w-full bg-green-400/20;
 }
 
-.prose .astro-code .line.diff.add::before {
-	@apply absolute text-green-600;
-	left: -0.95rem;
-	content: '+';
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code
+  .line.diff.add::before {
+  @apply absolute text-green-600;
+  left: -0.95rem;
+  content: "+";
 }
 
-.prose .astro-code .line.diff.remove {
-	@apply relative inline-block min-w-full bg-red-500/15;
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code
+  .line.diff.remove {
+  @apply relative inline-block min-w-full bg-red-500/15;
 }
 
-.prose .astro-code .line.diff.remove::before {
-	@apply absolute text-red-500;
-	left: -0.95rem;
-	content: '-';
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code
+  .line.diff.remove::before {
+  @apply absolute text-red-500;
+  left: -0.95rem;
+  content: "-";
 }
 
-.prose .astro-code .line.highlighted {
-	@apply inline-block min-w-full bg-slate-400/20;
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code
+  .line.highlighted {
+  @apply inline-block min-w-full bg-slate-400/20;
 }
 
-.prose .astro-code .highlighted-word {
-	@apply rounded-sm px-0.5 py-px;
-	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--prose-accent) 30%, transparent);
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code
+  .highlighted-word {
+  @apply rounded-sm px-0.5 py-px;
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--color-accent) 30%, transparent);
 }
 
-.prose .code-block-frame.has-code-file {
-	margin-top: 2.25rem;
+.prose .code-block-frame.has-code-file:not(:where(.not-prose, .not-prose *)) {
+  margin-top: 2.25rem;
 }
 
-.prose .astro-code.has-code-file-v1 {
-	border-top-left-radius: 0;
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  .astro-code.has-code-file-v1 {
+  border-top-left-radius: 0;
 }
 
-.prose .code-file-label {
-	@apply absolute z-10 inline-flex items-center rounded-md border px-2 py-1 font-code-block text-xs font-medium leading-4;
-	top: var(--file-name-offset, -0.75rem);
-	left: 0.75rem;
-	border-color: color-mix(in srgb, var(--prose-accent) 26%, transparent);
-	background: color-mix(in srgb, white 92%, var(--prose-accent) 8%);
-	box-shadow: 0 8px 24px color-mix(in srgb, var(--prose-accent) 13%, transparent);
-	color: rgb(var(--gray-dark));
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  > .code-file-label {
+  @apply absolute z-10 inline-flex items-center rounded-md border px-2 py-1 font-code text-xs font-medium leading-4;
+  top: var(--file-name-offset, -0.75rem);
+  left: 0.75rem;
+  border-color: color-mix(in srgb, var(--color-accent) 26%, transparent);
+  background: color-mix(in srgb, white 92%, var(--color-accent) 8%);
+  box-shadow: 0 8px 24px
+    color-mix(in srgb, var(--color-accent) 13%, transparent);
+  color: rgb(var(--gray-dark));
 }
 
-.prose .code-file-label--v1 {
-	top: -1.55rem;
-	left: 0;
-	border-bottom: 0;
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 0;
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  > .code-file-label--v1 {
+  top: -1.55rem;
+  left: 0;
+  border-bottom: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
-.prose .code-file-label--dot {
-	padding-left: 1rem;
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  > .code-file-label--dot {
+  padding-left: 1rem;
 }
 
-.prose .code-file-label--dot::before {
-	@apply absolute rounded-full bg-green-500;
-	top: 50%;
-	left: 0.45rem;
-	width: 0.3rem;
-	height: 0.3rem;
-	content: '';
-	transform: translateY(-50%);
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  > .code-file-label--dot::before {
+  @apply absolute rounded-full bg-green-500;
+  top: 50%;
+  left: 0.45rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  content: "";
+  transform: translateY(-50%);
 }
 
-.prose .copy-code {
-	@apply absolute end-3 rounded-md border px-2 py-1 font-code-block text-xs font-medium leading-4 transition;
-	z-index: 30;
-	top: -0.75rem;
-	border-color: color-mix(in srgb, var(--prose-accent) 24%, transparent);
-	background: color-mix(in srgb, white 92%, var(--prose-accent) 8%);
-	color: rgb(var(--gray-dark));
+.prose .code-block-frame:not(:where(.not-prose, .not-prose *)) > .copy-code {
+  @apply absolute end-3 rounded-md border px-2 py-1 font-code text-xs font-medium leading-4 transition;
+  z-index: 30;
+  top: -0.75rem;
+  border-color: color-mix(in srgb, var(--color-accent) 24%, transparent);
+  background: color-mix(in srgb, white 92%, var(--color-accent) 8%);
+  color: rgb(var(--gray-dark));
 }
 
-.prose .copy-code:hover,
-.prose .copy-code:focus-visible {
-	border-color: color-mix(in srgb, var(--prose-accent) 52%, transparent);
-	background: color-mix(in srgb, white 82%, var(--prose-accent) 18%);
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  > .copy-code:hover,
+.prose
+  .code-block-frame:not(:where(.not-prose, .not-prose *))
+  > .copy-code:focus-visible {
+  border-color: color-mix(in srgb, var(--color-accent) 52%, transparent);
+  background: color-mix(in srgb, white 82%, var(--color-accent) 18%);
 }
 
-.prose .code-block-frame.has-code-file .copy-code {
-	top: var(--file-name-offset, -0.75rem);
+.prose
+  .code-block-frame.has-code-file:not(:where(.not-prose, .not-prose *))
+  > .copy-code {
+  top: var(--file-name-offset, -0.75rem);
 }
 
 @media (prefers-color-scheme: dark) {
-	.prose .astro-code {
-		border-color: color-mix(in srgb, var(--prose-accent) 32%, transparent);
-		background: var(--shiki-dark-bg);
-		color: var(--shiki-dark);
-	}
+  .prose .code-block-frame:not(:where(.not-prose, .not-prose *)) .astro-code {
+    border-color: color-mix(in srgb, var(--color-accent) 32%, transparent);
+    background: var(--shiki-dark-bg);
+    color: var(--shiki-dark);
+  }
 
-	.prose .astro-code span {
-		color: var(--shiki-dark);
-	}
+  .prose
+    .code-block-frame:not(:where(.not-prose, .not-prose *))
+    .astro-code
+    span {
+    color: var(--shiki-dark);
+  }
 
-	.prose .code-file-label,
-	.prose .copy-code {
-		background: color-mix(in srgb, #141414 86%, var(--prose-accent) 14%);
-		color: #f5f5f5;
-	}
+  .prose
+    .code-block-frame:not(:where(.not-prose, .not-prose *))
+    > .code-file-label,
+  .prose .code-block-frame:not(:where(.not-prose, .not-prose *)) > .copy-code {
+    background: color-mix(in srgb, #141414 86%, var(--color-accent) 14%);
+    color: #f5f5f5;
+  }
 }

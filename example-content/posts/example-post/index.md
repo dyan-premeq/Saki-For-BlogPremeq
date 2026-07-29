@@ -1,9 +1,9 @@
 ---
-title: 'A Published Example'
-description: 'A minimal published post for standalone engine development.'
-pubDate: '2026-07-01'
-updatedDate: '2026-07-02'
-heroImage: './cover.jpg'
+title: "A Published Example"
+description: "A minimal published post for standalone engine development."
+pubDate: "2026-07-01"
+updatedDate: "2026-07-02"
+heroImage: "./cover.jpg"
 isDraft: false
 isFeatured: true
 tags:

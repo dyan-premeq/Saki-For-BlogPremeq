@@ -1,481 +1,510 @@
 ---
-import { Image } from 'astro:assets';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
-import { SITE } from '../../site_config';
-import { getPostSlug, getVisiblePosts } from '../../utils/content';
+import { Image } from "astro:assets";
+import FormattedDate from "../../components/FormattedDate.astro";
+import { SITE } from "../../config/site";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { getPostSlug, getVisiblePosts } from "../../utils/content";
+import { getArchiveYear } from "../../utils/date";
 
 const posts = await getVisiblePosts();
 
-const postsByYear = posts.reduce<Record<string, typeof posts>>((groups, post) => {
-	const year = String(post.data.pubDate.getFullYear());
-	groups[year] = groups[year] ?? [];
-	groups[year].push(post);
-	return groups;
-}, {});
+const postsByYear = new Map<string, typeof posts>();
+for (const post of posts) {
+  const year = getArchiveYear(post.data.pubDate);
+  const yearPosts = postsByYear.get(year) ?? [];
+  yearPosts.push(post);
+  postsByYear.set(year, yearPosts);
+}
 
-const yearGroups = Object.entries(postsByYear).sort(([yearA], [yearB]) => Number(yearB) - Number(yearA));
+const yearGroups = Array.from(postsByYear.entries());
 ---
 
-<!doctype html>
-<html lang={SITE.lang} dir={SITE.dir}>
-	<head>
-		<BaseHead title={SITE.title} description={SITE.description} />
-	</head>
-	<body class="saki-archive-body">
-		<Header />
-		<main class="paper-archive font-markdown-body">
-			<header class="archive-hero" aria-labelledby="archive-title">
-				<p class="archive-kicker font-markdown-footnote">Post Timeline</p>
-				<h1 id="archive-title" class="font-markdown-heading">Archive</h1>
-				<p>
+<SiteLayout
+  title={SITE.title}
+  description={SITE.description}
+  bodyClass="saki-archive-body"
+>
+  <main class="paper-archive font-prose">
+    <header class="archive-hero" aria-labelledby="archive-title">
+      <p class="archive-kicker font-meta">Post Timeline</p>
+      <h1 id="archive-title" class="font-display">Archive</h1>
+      <p></p>
+    </header>
 
-				</p>
-			</header>
-
-			<section class="archive-timeline" aria-label="Post archive grouped by year">
-				{
-					yearGroups.map(([year, yearPosts]) => (
-						<div class="year-row">
-							<aside class="year-rail" aria-label={`${year} posts`}>
-								<span class="year-label font-markdown-footnote">{year}</span>
-							</aside>
-							<ol class="post-stickers">
-					{
-									yearPosts.map((post, index) => (
-										<li class="sticker-item" style={`--tilt: ${index % 2 === 0 ? '-0.35deg' : '0.45deg'}`}>
-											<article class="post-sticker">
-													<a class="sticker-link" href={`/post/${getPostSlug(post)}/`} aria-label={`Read ${post.data.title}`}>
-													<span class="date-tab font-markdown-footnote">
-														<FormattedDate date={post.data.pubDate} />
-													</span>
-									{post.data.heroImage && (
-										<figure class="photo-sticker" aria-hidden="true">
-											<Image width={390} height={240} src={post.data.heroImage} alt="" />
-										</figure>
-									)}
-													<div class="sticker-copy">
-														<h2 class="font-markdown-heading">{post.data.title}</h2>
-														<p class="sticker-description">{post.data.description}</p>
-														{post.data.tags && post.data.tags.length > 0 && (
-															<ul class="tag-list" aria-label="Post tags">
-																{post.data.tags.map((tag) => (
-																	<li>#{tag}</li>
-																))}
-															</ul>
-														)}
-													</div>
-												</a>
-											</article>
-										</li>
-									))
-					}
-							</ol>
-						</div>
-					))
-				}
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+    <section class="archive-timeline" aria-label="Post archive grouped by year">
+      {
+        yearGroups.map(([year, yearPosts]) => (
+          <div class="year-row">
+            <aside class="year-rail" aria-label={`${year} posts`}>
+              <span class="year-label font-meta">{year}</span>
+            </aside>
+            <ol class="post-stickers">
+              {yearPosts.map((post, index) => (
+                <li
+                  class="sticker-item"
+                  style={`--tilt: ${index % 2 === 0 ? "-0.35deg" : "0.45deg"}`}
+                >
+                  <article class="post-sticker">
+                    <a
+                      class="sticker-link"
+                      href={`/post/${getPostSlug(post)}/`}
+                      aria-label={`Read ${post.data.title}`}
+                    >
+                      <span class="date-tab font-meta">
+                        <FormattedDate date={post.data.pubDate} />
+                      </span>
+                      {post.data.heroImage && (
+                        <figure class="photo-sticker" aria-hidden="true">
+                          <Image
+                            width={390}
+                            height={240}
+                            widths={[180, 240, 300, 390, 600]}
+                            sizes="(max-width: 560px) min(calc(100vw - 60px), 340px), clamp(180px, 24vw, 300px)"
+                            src={post.data.heroImage}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </figure>
+                      )}
+                      <div class="sticker-copy">
+                        <h2 class="font-display">{post.data.title}</h2>
+                        <p class="sticker-description">
+                          {post.data.description}
+                        </p>
+                        {post.data.tags && post.data.tags.length > 0 && (
+                          <ul class="tag-list" aria-label="Post tags">
+                            {post.data.tags.map((tag) => (
+                              <li>#{tag}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </a>
+                  </article>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))
+      }
+    </section>
+  </main>
+</SiteLayout>
 
 <style>
-	:global(body.saki-archive-body) {
-		--background: 255 250 243;
-		--middle-background: 255 250 243;
-		background:
-			radial-gradient(circle at 18% 14%, rgba(249, 168, 212, 0.22), transparent 22rem),
-			repeating-linear-gradient(90deg, rgba(254, 150, 0, 0.035) 0 1px, transparent 1px 86px),
-			rgb(var(--middle-background));
-		color: #3f352c;
-	}
+  :global(body.saki-archive-body) {
+    --background: 255 250 243;
+    --middle-background: 255 250 243;
+    background:
+      radial-gradient(
+        circle at 18% 14%,
+        rgba(249, 168, 212, 0.22),
+        transparent 22rem
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(254, 150, 0, 0.035) 0 1px,
+        transparent 1px 86px
+      ),
+      rgb(var(--middle-background));
+    color: #3f352c;
+  }
 
-	.paper-archive {
-		width: min(1080px, calc(100% - 32px));
-		max-width: none;
-		margin: auto;
-		padding: clamp(2rem, 6vw, 4.5rem) 0 4.5rem;
-	}
+  .paper-archive {
+    width: min(1080px, calc(100% - 32px));
+    max-width: none;
+    margin: auto;
+    padding: clamp(2rem, 6vw, 4.5rem) 0 4.5rem;
+  }
 
-	.archive-hero {
-		position: relative;
-		margin: 0 0 clamp(2rem, 5vw, 3.5rem);
-		padding: clamp(1.1rem, 4vw, 2rem);
-		border: 1px dashed rgba(254, 150, 0, 0.34);
-		background:
-			linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 251, 235, 0.9)),
-			repeating-linear-gradient(0deg, rgba(63, 53, 44, 0.035) 0 1px, transparent 1px 14px);
-		box-shadow: 0 22px 54px -44px rgba(88, 48, 8, 0.65);
-	}
+  .archive-hero {
+    position: relative;
+    margin: 0 0 clamp(2rem, 5vw, 3.5rem);
+    padding: clamp(1.1rem, 4vw, 2rem);
+    border: 1px dashed rgba(254, 150, 0, 0.34);
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.82),
+        rgba(255, 251, 235, 0.9)
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgba(63, 53, 44, 0.035) 0 1px,
+        transparent 1px 14px
+      );
+    box-shadow: 0 22px 54px -44px rgba(88, 48, 8, 0.65);
+  }
 
-	.archive-hero::after {
-		position: absolute;
-		right: clamp(18px, 5vw, 54px);
-		bottom: -12px;
-		width: 92px;
-		height: 28px;
-		background: rgba(249, 168, 212, 0.54);
-		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-		clip-path: polygon(8% 0, 100% 14%, 92% 100%, 0 86%);
-		content: '';
-		transform: rotate(-3deg);
-	}
+  .archive-hero::after {
+    position: absolute;
+    right: clamp(18px, 5vw, 54px);
+    bottom: -12px;
+    width: 92px;
+    height: 28px;
+    background: rgba(249, 168, 212, 0.54);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    clip-path: polygon(8% 0, 100% 14%, 92% 100%, 0 86%);
+    content: "";
+    transform: rotate(-3deg);
+  }
 
-	.archive-kicker {
-		margin: 0 0 0.45rem;
-		color: #fe9600;
-		font-size: 0.76rem;
-		font-weight: 700;
-		letter-spacing: 0.2em;
-		text-transform: uppercase;
-	}
+  .archive-kicker {
+    margin: 0 0 0.45rem;
+    color: var(--color-accent);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
 
-	.archive-hero h1 {
-		margin: 0;
-		color: #322820;
-		font-size: clamp(2.3rem, 7vw, 5.2rem);
-		font-weight: 400;
-		letter-spacing: -0.06em;
-		line-height: 0.95;
-	}
+  .archive-hero h1 {
+    margin: 0;
+    color: #322820;
+    font-size: clamp(2.3rem, 7vw, 5.2rem);
+    font-weight: 400;
+    letter-spacing: -0.06em;
+    line-height: 0.95;
+  }
 
-	.archive-hero p:not(.archive-kicker) {
-		max-width: 680px;
-		margin: 1rem 0 0;
-		color: rgba(63, 53, 44, 0.74);
-		font-size: clamp(1rem, 2vw, 1.12rem);
-		line-height: 1.9;
-	}
+  .archive-hero p:not(.archive-kicker) {
+    max-width: 680px;
+    margin: 1rem 0 0;
+    color: rgba(63, 53, 44, 0.74);
+    font-size: clamp(1rem, 2vw, 1.12rem);
+    line-height: 1.9;
+  }
 
-	.archive-timeline {
-		display: grid;
-		gap: 2.2rem;
-	}
+  .archive-timeline {
+    display: grid;
+    gap: 2.2rem;
+  }
 
-	.year-row {
-		display: grid;
-		grid-template-columns: 120px minmax(0, 1fr);
-		gap: clamp(1.1rem, 4vw, 2rem);
-	}
+  .year-row {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: clamp(1.1rem, 4vw, 2rem);
+  }
 
-	.year-rail {
-		position: relative;
-		padding-top: 0.45rem;
-	}
+  .year-rail {
+    position: relative;
+    padding-top: 0.45rem;
+  }
 
-	.year-rail::before {
-		position: absolute;
-		top: 2.65rem;
-		bottom: -2.4rem;
-		left: 50%;
-		width: 4px;
-		background:
-			repeating-linear-gradient(180deg, rgba(254, 150, 0, 0.38) 0 10px, transparent 10px 21px),
-			linear-gradient(90deg, rgba(255, 251, 235, 0.72), rgba(254, 150, 0, 0.16));
-		clip-path: polygon(18% 0, 100% 1%, 82% 100%, 0 99%);
-		content: '';
-		transform: translateX(-50%);
-	}
+  .year-rail::before {
+    position: absolute;
+    top: 2.65rem;
+    bottom: -2.4rem;
+    left: 50%;
+    width: 4px;
+    background:
+      repeating-linear-gradient(
+        180deg,
+        rgba(254, 150, 0, 0.38) 0 10px,
+        transparent 10px 21px
+      ),
+      linear-gradient(90deg, rgba(255, 251, 235, 0.72), rgba(254, 150, 0, 0.16));
+    clip-path: polygon(18% 0, 100% 1%, 82% 100%, 0 99%);
+    content: "";
+    transform: translateX(-50%);
+  }
 
-	.year-row:last-child .year-rail::before {
-		bottom: 0.5rem;
-	}
+  .year-row:last-child .year-rail::before {
+    bottom: 0.5rem;
+  }
 
-	.year-label {
-		position: sticky;
-		top: 90px;
-		display: inline-block;
-		min-width: 86px;
-		padding: 0.55rem 0.7rem;
-		background: #fe9600;
-		color: #2b1905;
-		font-size: 0.92rem;
-		font-weight: 800;
-		letter-spacing: 0.14em;
-		line-height: 1;
-		text-align: center;
-		text-transform: uppercase;
-		clip-path: polygon(9% 0, 100% 0, 91% 100%, 0 100%);
-		box-shadow: 0 10px 24px -18px rgba(60, 32, 4, 0.9);
-	}
+  .year-label {
+    position: sticky;
+    top: 90px;
+    display: inline-block;
+    min-width: 86px;
+    padding: 0.55rem 0.7rem;
+    background: var(--color-accent);
+    color: #2b1905;
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+    clip-path: polygon(9% 0, 100% 0, 91% 100%, 0 100%);
+    box-shadow: 0 10px 24px -18px rgba(60, 32, 4, 0.9);
+  }
 
-	.year-label::after {
-		position: absolute;
-		right: -16px;
-		top: 50%;
-		width: 20px;
-		height: 18px;
-		background: #f9a8d4;
-		clip-path: polygon(0 8%, 100% 0, 78% 100%, 12% 82%);
-		content: '';
-		transform: translateY(-50%) rotate(8deg);
-	}
+  .year-label::after {
+    position: absolute;
+    right: -16px;
+    top: 50%;
+    width: 20px;
+    height: 18px;
+    background: #f9a8d4;
+    clip-path: polygon(0 8%, 100% 0, 78% 100%, 12% 82%);
+    content: "";
+    transform: translateY(-50%) rotate(8deg);
+  }
 
-	.post-stickers {
-		display: grid;
-		gap: 1.2rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
+  .post-stickers {
+    display: grid;
+    gap: 1.2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 
-	.sticker-item {
-		position: relative;
-		isolation: isolate;
-	}
+  .sticker-item {
+    position: relative;
+  }
 
-	.sticker-item::after {
-		position: absolute;
-		inset: 0.85rem 0.7rem 0.15rem 0.95rem;
-		background: rgba(73, 42, 12, 0.22);
-		border-radius: 28px;
-		content: '';
-		filter: blur(18px);
-		opacity: 0.72;
-		pointer-events: none;
-		transform: translate(10px, 14px) rotate(var(--tilt));
-		transition: opacity 0.22s ease, transform 0.22s ease;
-		z-index: -1;
-	}
+  .sticker-item::before {
+    position: absolute;
+    top: 2rem;
+    left: calc(-1rem - 16px);
+    width: 28px;
+    height: 22px;
+    background: #fffbeb;
+    border: 2px solid var(--color-accent);
+    clip-path: polygon(0 14%, 100% 0, 84% 100%, 8% 86%);
+    content: "";
+    z-index: 2;
+  }
 
-	.sticker-item::before {
-		position: absolute;
-		top: 2rem;
-		left: calc(-1rem - 16px);
-		width: 28px;
-		height: 22px;
-		background: #fffbeb;
-		border: 2px solid #fe9600;
-		clip-path: polygon(0 14%, 100% 0, 84% 100%, 8% 86%);
-		content: '';
-		z-index: 2;
-	}
+  .post-sticker {
+    position: relative;
+    z-index: 1;
+    background:
+      linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0.78),
+        rgba(255, 251, 235, 0.96)
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgba(254, 150, 0, 0.04) 0 1px,
+        transparent 1px 13px
+      ),
+      #fffbeb;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 22px 42px -30px rgba(49, 30, 8, 0.72);
+    clip-path: polygon(
+      0.7rem 0,
+      calc(100% - 1.1rem) 0.25rem,
+      100% 1.25rem,
+      calc(100% - 0.5rem) calc(100% - 0.75rem),
+      1.1rem 100%,
+      0 calc(100% - 1rem)
+    );
+    transform: rotate(var(--tilt));
+    transition:
+      transform 0.22s ease,
+      box-shadow 0.22s ease;
+  }
 
-	.post-sticker {
-		position: relative;
-		z-index: 1;
-		background:
-			linear-gradient(120deg, rgba(255, 255, 255, 0.78), rgba(255, 251, 235, 0.96)),
-			repeating-linear-gradient(0deg, rgba(254, 150, 0, 0.04) 0 1px, transparent 1px 13px),
-			#fffbeb;
-		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 20px 46px -38px rgba(49, 30, 8, 0.88);
-		clip-path: polygon(0.7rem 0, calc(100% - 1.1rem) 0.25rem, 100% 1.25rem, calc(100% - 0.5rem) calc(100% - 0.75rem), 1.1rem 100%, 0 calc(100% - 1rem));
-		transform: rotate(var(--tilt));
-		transition: transform 0.22s ease, box-shadow 0.22s ease;
-	}
+  .post-sticker::before {
+    position: absolute;
+    top: -10px;
+    left: 42px;
+    width: 86px;
+    height: 24px;
+    background: rgba(249, 168, 212, 0.58);
+    clip-path: polygon(5% 8%, 100% 0, 94% 86%, 0 100%);
+    content: "";
+    transform: rotate(-2deg);
+  }
 
-	.post-sticker::before {
-		position: absolute;
-		top: -10px;
-		left: 42px;
-		width: 86px;
-		height: 24px;
-		background: rgba(249, 168, 212, 0.58);
-		clip-path: polygon(5% 8%, 100% 0, 94% 86%, 0 100%);
-		content: '';
-		transform: rotate(-2deg);
-	}
+  .post-sticker:hover,
+  .post-sticker:focus-within {
+    box-shadow: 0 24px 54px -34px rgba(49, 30, 8, 0.92);
+    transform: translateY(-3px) rotate(0deg);
+  }
 
-	.post-sticker:hover,
-	.post-sticker:focus-within {
-		box-shadow: 0 24px 54px -34px rgba(49, 30, 8, 0.92);
-		transform: translateY(-3px) rotate(0deg);
-	}
+  .sticker-link {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(1rem, 3vw, 1.5rem);
+    align-items: center;
+    min-height: clamp(9.5rem, 23vw, 11rem);
+    padding: clamp(1.1rem, 3vw, 1.6rem);
+    color: inherit;
+    text-decoration: none;
+  }
 
-	.sticker-item:hover::after,
-	.sticker-item:focus-within::after {
-		opacity: 0.82;
-		transform: translate(12px, 18px) rotate(0deg);
-	}
+  .sticker-link:focus-visible {
+    outline: 3px solid rgba(254, 150, 0, 0.72);
+    outline-offset: 4px;
+  }
 
-	.sticker-link {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
-		gap: clamp(1rem, 3vw, 1.5rem);
-		align-items: center;
-		min-height: clamp(9.5rem, 23vw, 11rem);
-		padding: clamp(1.1rem, 3vw, 1.6rem);
-		color: inherit;
-		text-decoration: none;
-	}
+  .date-tab {
+    grid-column: 1 / -1;
+    justify-self: start;
+    padding: 0.28rem 0.58rem;
+    background: #fef3c7;
+    color: rgba(63, 53, 44, 0.72);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 100%, 8px 100%);
+  }
 
-	.sticker-link:focus-visible {
-		outline: 3px solid rgba(254, 150, 0, 0.72);
-		outline-offset: 4px;
-	}
+  .photo-sticker {
+    grid-column: 2;
+    grid-row: 2;
+    width: clamp(180px, 24vw, 300px);
+    aspect-ratio: 13 / 8;
+    margin: 0;
+    padding: 0.45rem;
+    background: var(--color-paper);
+    box-shadow: 0 12px 26px -22px rgba(20, 12, 4, 0.9);
+    clip-path: polygon(0 0, 100% 6%, 93% 100%, 6% 92%);
+    transform: rotate(2deg);
+  }
 
-	.date-tab {
-		grid-column: 1 / -1;
-		justify-self: start;
-		padding: 0.28rem 0.58rem;
-		background: #fef3c7;
-		color: rgba(63, 53, 44, 0.72);
-		font-size: 0.68rem;
-		font-weight: 800;
-		letter-spacing: 0.14em;
-		line-height: 1.2;
-		text-transform: uppercase;
-		clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 100%, 8px 100%);
-	}
+  .photo-sticker :global(img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 13 / 8;
+    height: auto;
+    border-radius: 0;
+    object-fit: cover;
+    clip-path: polygon(2% 0, 100% 4%, 96% 100%, 0 96%);
+  }
 
-	.photo-sticker {
-		grid-column: 2;
-		grid-row: 2;
-		width: clamp(180px, 24vw, 300px);
-		margin: 0;
-		padding: 0.45rem;
-		background: #fffaf3;
-		box-shadow: 0 12px 26px -22px rgba(20, 12, 4, 0.9);
-		clip-path: polygon(0 0, 100% 6%, 93% 100%, 6% 92%);
-		transform: rotate(2deg);
-	}
+  .sticker-copy {
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
+  }
 
-	.photo-sticker :global(img) {
-		display: block;
-		width: 100%;
-		aspect-ratio: 13 / 8;
-		height: auto;
-		border-radius: 0;
-		object-fit: cover;
-		clip-path: polygon(2% 0, 100% 4%, 96% 100%, 0 96%);
-	}
+  .sticker-copy h2 {
+    margin: 0;
+    color: #342b24;
+    font-size: clamp(1.35rem, 3vw, 2.05rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.18;
+    transition: color 0.2s ease;
+  }
 
-	.sticker-copy {
-		grid-column: 1;
-		grid-row: 2;
-		min-width: 0;
-	}
+  .sticker-link:hover h2,
+  .sticker-link:focus-visible h2 {
+    color: var(--color-accent);
+  }
 
-	.sticker-copy h2 {
-		margin: 0;
-		color: #342b24;
-		font-size: clamp(1.35rem, 3vw, 2.05rem);
-		font-weight: 700;
-		letter-spacing: -0.035em;
-		line-height: 1.18;
-		transition: color 0.2s ease;
-	}
+  .sticker-description {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0.7rem 0 0;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    color: rgba(63, 53, 44, 0.72);
+    font-size: 0.95rem;
+    line-height: 1.85;
+  }
 
-	.sticker-link:hover h2,
-	.sticker-link:focus-visible h2 {
-		color: #fe9600;
-	}
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0.95rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
 
-	.sticker-description {
-		display: -webkit-box;
-		overflow: hidden;
-		margin: 0.7rem 0 0;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 3;
-		color: rgba(63, 53, 44, 0.72);
-		font-size: 0.95rem;
-		line-height: 1.85;
-	}
+  .tag-list li {
+    padding: 0.16rem 0.48rem;
+    background: rgba(249, 168, 212, 0.2);
+    color: rgba(63, 53, 44, 0.72);
+    font-size: 0.72rem;
+    line-height: 1.4;
+    clip-path: polygon(0 0, 100% 8%, 94% 100%, 7% 92%);
+  }
 
-	.tag-list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.45rem;
-		margin: 0.95rem 0 0;
-		padding: 0;
-		list-style: none;
-	}
+  @media (prefers-reduced-motion: reduce) {
+    .post-sticker,
+    .sticker-copy h2 {
+      transition: none;
+    }
 
-	.tag-list li {
-		padding: 0.16rem 0.48rem;
-		background: rgba(249, 168, 212, 0.2);
-		color: rgba(63, 53, 44, 0.72);
-		font-size: 0.72rem;
-		line-height: 1.4;
-		clip-path: polygon(0 0, 100% 8%, 94% 100%, 7% 92%);
-	}
+    .post-sticker,
+    .post-sticker:hover,
+    .post-sticker:focus-within,
+    .photo-sticker,
+    .archive-hero::after {
+      transform: none;
+    }
+  }
 
-	@media (prefers-reduced-motion: reduce) {
-		.post-sticker,
-		.sticker-item::after,
-		.sticker-copy h2 {
-			transition: none;
-		}
+  @media (max-width: 760px) {
+    .paper-archive {
+      width: min(100% - 24px, 640px);
+      padding-top: 1.5rem;
+    }
 
-		.sticker-item::after,
-		.sticker-item:hover::after,
-		.sticker-item:focus-within::after,
-		.post-sticker,
-		.post-sticker:hover,
-		.post-sticker:focus-within,
-		.photo-sticker,
-		.archive-hero::after {
-			transform: none;
-		}
-	}
+    .year-row {
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
 
-	@media (max-width: 760px) {
-		.paper-archive {
-			width: min(100% - 24px, 640px);
-			padding-top: 1.5rem;
-		}
+    .year-rail {
+      padding: 0 0 0 0.2rem;
+    }
 
-		.year-row {
-			grid-template-columns: 1fr;
-			gap: 0.85rem;
-		}
+    .year-rail::before {
+      top: auto;
+      bottom: -0.65rem;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(254, 150, 0, 0.34) 0 12px,
+        transparent 12px 24px
+      );
+      transform: none;
+    }
 
-		.year-rail {
-			padding: 0 0 0 0.2rem;
-		}
+    .year-label {
+      position: relative;
+      top: auto;
+      min-width: 76px;
+    }
 
-		.year-rail::before {
-			top: auto;
-			bottom: -0.65rem;
-			left: 0;
-			width: 100%;
-			height: 3px;
-			background: repeating-linear-gradient(90deg, rgba(254, 150, 0, 0.34) 0 12px, transparent 12px 24px);
-			transform: none;
-		}
+    .year-label::after,
+    .sticker-item::before {
+      display: none;
+    }
 
-		.year-label {
-			position: relative;
-			top: auto;
-			min-width: 76px;
-		}
+    .post-sticker,
+    .post-sticker:hover,
+    .post-sticker:focus-within {
+      transform: none;
+    }
+  }
 
-		.year-label::after,
-		.sticker-item::before {
-			display: none;
-		}
+  @media (max-width: 560px) {
+    .archive-hero {
+      padding: 1.25rem;
+    }
 
-		.post-sticker,
-		.post-sticker:hover,
-		.post-sticker:focus-within {
-			transform: none;
-		}
-	}
+    .sticker-link {
+      grid-template-columns: 1fr;
+      gap: 0.9rem;
+      min-height: 13rem;
+    }
 
-	@media (max-width: 560px) {
-		.archive-hero {
-			padding: 1.25rem;
-		}
+    .date-tab,
+    .sticker-copy,
+    .photo-sticker {
+      grid-column: 1;
+      grid-row: auto;
+    }
 
-		.sticker-link {
-			grid-template-columns: 1fr;
-			gap: 0.9rem;
-			min-height: 13rem;
-		}
-
-		.date-tab,
-		.sticker-copy,
-		.photo-sticker {
-			grid-column: 1;
-			grid-row: auto;
-		}
-
-		.photo-sticker {
-			width: min(100%, 340px);
-			transform: none;
-		}
-	}
+    .photo-sticker {
+      width: min(100%, 340px);
+      transform: none;
+    }
+  }
 </style>

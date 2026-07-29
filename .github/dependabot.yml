@@ -8,11 +8,11 @@ updates:
     groups:
       pnpm-dependencies:
         patterns:
-          - '*'
+          - "*"
         update-types:
           - minor
           - patch
     ignore:
-      - dependency-name: '*'
+      - dependency-name: "*"
         update-types:
           - version-update:semver-major
