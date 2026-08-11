@@ -1,0 +1,12 @@
+/*
+  Second half of the compiled design-system stylesheet.
+
+  typography.css must be compiled on its own — see the long comment in
+  ds-styles.css for why importing it alongside global.css silently drops the
+  theme variables. build-css.mjs compiles this file and appends the result to
+  the ds-styles.css output.
+
+  Compiled alone this emits only the .prose layer (no preflight, no @import),
+  so appending it is safe.
+*/
+@import "../src/styles/typography.css";

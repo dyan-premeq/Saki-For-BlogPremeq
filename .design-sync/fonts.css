@@ -1,0 +1,98 @@
+/*
+  @font-face rules for the six local brand families.
+
+  These are NOT hand-invented: the site loads its fonts through Astro's Fonts
+  API (`fonts: [...]` in astro.config.ts + <Font cssVariable> in SiteLayout),
+  which generates the @font-face rules at build time and never writes them to
+  a stylesheet. This file transcribes those same declarations — family name,
+  src file, weight, style, display — so the uploaded bundle is self-contained.
+
+  KEEP IN SYNC with the `fonts:` array in astro.config.ts. If a family, weight,
+  or file changes there, mirror it here.
+
+  design-sync reads this via cfg.extraFonts: it parses these blocks, copies each
+  referenced font file into the bundle's fonts/ directory, and rewrites the
+  url()s to point at those copies.
+*/
+
+/* Atkinson — UI + metadata (--font-atkinson) */
+@font-face {
+  font-family: "Atkinson";
+  src: url("../src/assets/fonts/atkinson-regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson";
+  src: url("../src/assets/fonts/atkinson-bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Cascadia Code — code (--font-cascadia-code) */
+@font-face {
+  font-family: "Cascadia Code";
+  src: url("../src/assets/fonts/cascadia-code.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* JetBrains Mono — code, preferred (--font-jetbrains-mono) */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../src/assets/fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Syne — latin prose (--font-syne) */
+@font-face {
+  font-family: "Syne";
+  src: url("../src/assets/fonts/Syne-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Syne";
+  src: url("../src/assets/fonts/Syne-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Tangerine — latin pull-quotes (--font-tangerine) */
+@font-face {
+  font-family: "Tangerine";
+  src: url("../src/assets/fonts/Tangerine-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Tangerine";
+  src: url("../src/assets/fonts/Tangerine-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Liberation Serif — latin display / headings (--font-liberation-serif) */
+@font-face {
+  font-family: "Liberation Serif";
+  src: url("../src/assets/fonts/LiberationSerif-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Liberation Serif";
+  src: url("../src/assets/fonts/LiberationSerif-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

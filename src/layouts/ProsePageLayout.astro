@@ -16,9 +16,6 @@ interface Props {
 
 const { title, description, pubDate, updatedDate, heroImage, lead } =
   Astro.props;
-
-const proseFontLink =
-  '<link href="https://fontsapi.zeoseven.com/802/main/result.css" onload="this.onload=null;this.rel=\'stylesheet\'" rel="preload" as="style" crossorigin /><noscript><link rel="stylesheet" href="https://fontsapi.zeoseven.com/802/main/result.css" /></noscript>';
 ---
 
 <SiteLayout
@@ -28,7 +25,6 @@ const proseFontLink =
   bodyClass="saki-prose-body"
 >
   <Fragment slot="head">
-    <Fragment set:html={proseFontLink} />
     <slot name="head" />
   </Fragment>
 

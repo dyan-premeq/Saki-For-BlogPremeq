@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>saki-astro foundations — specimen</title>
+    <!-- Loads the real uploaded entry point, so this page fails exactly the
+         way a design built with this system would. Dot-prefixed: stays local,
+         never uploads. -->
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .spec { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+      .spec h2.sec {
+        font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+        color: rgb(var(--gray)); margin: 3rem 0 1rem;
+        border-bottom: 1px solid rgb(var(--gray-light)); padding-bottom: 0.5rem;
+      }
+      .swatches { display: flex; flex-wrap: wrap; gap: 1rem; }
+      .sw { width: 140px; font-size: 0.7rem; color: rgb(var(--gray-dark)); }
+      .sw i { display: block; height: 56px; border-radius: 6px; border: 1px solid rgba(0,0,0,.08); margin-bottom: .35rem; }
+      .row { margin: 0.85rem 0; }
+      .row small { display: block; font-size: 0.68rem; letter-spacing: .08em;
+        text-transform: uppercase; color: rgb(var(--gray)); margin-bottom: .15rem; }
+      .ruler { height: 10px; background: var(--color-accent); border-radius: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="spec">
+      <h1 class="font-display" style="font-size: 2.8rem; color: rgb(var(--black))">
+        saki-astro foundations
+      </h1>
+      <p class="font-meta" style="color: rgb(var(--gray))">
+        Specimen sheet — rendered from the bundle's own <code>styles.css</code>.
+      </p>
+
+      <h2 class="sec">Font roles — Latin</h2>
+      <div class="row"><small>.font-ui — Atkinson</small>
+        <div class="font-ui" style="font-size:1.4rem">The quick brown fox jumps over the lazy dog</div></div>
+      <div class="row"><small>.font-prose — Syne</small>
+        <div class="font-prose" style="font-size:1.4rem">The quick brown fox jumps over the lazy dog</div></div>
+      <div class="row"><small>.font-display — Liberation Serif</small>
+        <div class="font-display" style="font-size:1.4rem">The quick brown fox jumps over the lazy dog</div></div>
+      <div class="row"><small>.font-quote — Tangerine</small>
+        <div class="font-quote" style="font-size:2rem">The quick brown fox jumps over the lazy dog</div></div>
+      <div class="row"><small>.font-meta — Atkinson</small>
+        <div class="font-meta" style="font-size:1.4rem">The quick brown fox jumps over the lazy dog</div></div>
+      <div class="row"><small>.font-code — JetBrains Mono</small>
+        <div class="font-code" style="font-size:1.4rem">const answer = 42; // 0O1lI</div></div>
+
+      <h2 class="sec">Font roles — Chinese (lang="zh" flips the stack CJK-first)</h2>
+      <div class="row" lang="zh"><small>.font-prose — LXGW WenKai</small>
+        <div class="font-prose" style="font-size:1.5rem">春江潮水连海平，海上明月共潮生。</div></div>
+      <div class="row" lang="zh"><small>.font-display — LXGW Heart Serif</small>
+        <div class="font-display" style="font-size:1.5rem">春江潮水连海平，海上明月共潮生。</div></div>
+      <div class="row" lang="zh"><small>.font-quote — YShi-Written</small>
+        <div class="font-quote" style="font-size:1.8rem">春江潮水连海平，海上明月共潮生。</div></div>
+
+      <h2 class="sec">Color tokens</h2>
+      <div class="swatches">
+        <div class="sw"><i style="background: var(--color-accent)"></i>--color-accent<br />#fe9600</div>
+        <div class="sw"><i style="background: var(--color-link)"></i>--color-link<br />#2337ff</div>
+        <div class="sw"><i style="background: var(--color-link-strong)"></i>--color-link-strong<br />#000d8a</div>
+        <div class="sw"><i style="background: var(--color-paper)"></i>--color-paper<br />#fffaf3</div>
+        <div class="sw"><i style="background: rgb(var(--black))"></i>rgb(var(--black))</div>
+        <div class="sw"><i style="background: rgb(var(--gray-dark))"></i>rgb(var(--gray-dark))</div>
+        <div class="sw"><i style="background: rgb(var(--gray))"></i>rgb(var(--gray))</div>
+        <div class="sw"><i style="background: rgb(var(--gray-light))"></i>rgb(var(--gray-light))</div>
+      </div>
+      <div class="row" style="margin-top:1.5rem">
+        <small>--box-shadow</small>
+        <div style="height:56px;width:220px;background:#fff;border-radius:8px;box-shadow:var(--box-shadow)"></div>
+      </div>
+
+      <h2 class="sec">Widths</h2>
+      <div class="row"><small>--width-prose (720px)</small>
+        <div class="ruler" style="width: var(--width-prose); max-width:100%"></div></div>
+      <div class="row"><small>--width-content (960px)</small>
+        <div class="ruler" style="width: var(--width-content); max-width:100%"></div></div>
+
+      <h2 class="sec">Tailwind utilities (safelisted for the design agent)</h2>
+      <div class="flex gap-4 items-center">
+        <div class="rounded-lg shadow-md p-4 bg-white border">flex · gap-4 · rounded-lg · shadow-md · p-4</div>
+        <div class="text-2xl font-bold">text-2xl</div>
+      </div>
+      <div class="grid grid-cols-3 gap-4" style="margin-top:1rem">
+        <div class="p-4 rounded-md" style="background: var(--color-paper)">grid-cols-3</div>
+        <div class="p-4 rounded-md" style="background: var(--color-paper)">gap-4</div>
+        <div class="p-4 rounded-md" style="background: var(--color-paper)">p-4</div>
+      </div>
+
+      <h2 class="sec">.prose — the article type scale</h2>
+      <div class="prose">
+        <h1>Heading level one</h1>
+        <p>
+          Body copy in the prose scale, with an <a href="#">inline link</a>,
+          <strong>bold text</strong>, <em>emphasis</em> and <code>inline_code()</code>.
+        </p>
+        <h2>Heading level two</h2>
+        <blockquote>A blockquote, ruled in the accent color.</blockquote>
+        <ul><li>Unordered item</li><li>Another item</li></ul>
+        <ol><li>Ordered item</li><li>Another item</li></ol>
+        <table>
+          <thead><tr><th>Column</th><th>Column</th></tr></thead>
+          <tbody><tr><td>Cell</td><td>Cell</td></tr></tbody>
+        </table>
+        <h3>Heading level three</h3>
+        <p lang="zh">中文正文段落，用于检查中日韩字体与拉丁字体的混排效果。</p>
+      </div>
+    </div>
+  </body>
+</html>

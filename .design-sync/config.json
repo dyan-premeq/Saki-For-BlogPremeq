@@ -1,0 +1,28 @@
+{
+  "pkg": "saki-astro",
+  "globalName": "SakiAstro",
+  "projectId": "6540e7fa-bcd4-431a-8c97-f27f2da145f0",
+  "shape": "package",
+  "entry": ".design-sync/ds-entry.mjs",
+  "cssEntry": ".design-sync/.cache/ds.css",
+  "extraFonts": [".design-sync/fonts.css"],
+  "guidelinesGlob": [],
+  "runtimeFontPrefixes": [
+    "LXGW",
+    "YShi",
+    "PingFang",
+    "Hiragino",
+    "Microsoft YaHei",
+    "Noto Sans CJK",
+    "Noto Serif CJK",
+    "Source Han",
+    "Sarasa",
+    "Songti",
+    "SimSun",
+    "SimKai",
+    "KaiTi",
+    "STKaiti"
+  ],
+  "buildCmd": "node .design-sync/build-css.mjs",
+  "readmeHeader": ".design-sync/conventions.md"
+}

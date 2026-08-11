@@ -1,0 +1,93 @@
+/*
+  Design-system stylesheet entry for design-sync.
+
+  Compiled by .design-sync/build-css.mjs into .design-sync/.cache/ds.css, which
+  cfg.cssEntry points at. The compile step matters: the repo's real stylesheets
+  use Tailwind v4 at-rules (@import "tailwindcss", @plugin, @reference) that only
+  resolve inside a Tailwind build — shipping the raw sources would upload a
+  stylesheet that cannot be parsed standalone.
+
+  Everything here either imports the repo's own CSS or restates values already
+  declared in astro.config.ts. No design decisions are invented in this file.
+*/
+
+/* Remote CJK brand families, exactly as SiteLayout.astro loads them.
+   Sliced by unicode-range, so a page only fetches the blocks it uses.
+     24  LXGW Heart Serif  -> --font-display-cjk
+     292 LXGW WenKai       -> --font-prose-cjk
+     802 YShi-Written      -> --font-quote-cjk
+   Note: the service returns 204 (empty) to localhost referers, so these
+   families do NOT render in a locally-served preview. They resolve normally
+   from claude.ai and from the production domain — verified with both. */
+@import url("https://fontsapi.zeoseven.com/24/main/result.css");
+@import url("https://fontsapi.zeoseven.com/292/main/result.css");
+@import url("https://fontsapi.zeoseven.com/802/main/result.css");
+
+/* The repo's real base stylesheet — the source of truth for every token and
+   role class below.
+
+   typography.css is deliberately NOT imported here. It opens with
+   `@reference "./global.css"`, which tells Tailwind to load global.css for
+   context WITHOUT emitting it — and that suppresses global.css's own
+   `@theme inline` variables (--font-prose-latin, --font-display-cjk, …) from
+   the output, leaving the .font-* role classes pointing at undefined vars.
+   It is compiled separately via ds-prose.css and concatenated, which is
+   exactly how the real site ships it (SiteLayout.css + ProsePageLayout.css).
+   See .design-sync/NOTES.md. */
+@import "../src/styles/global.css";
+
+/* Scan the site's own markup so every utility the blog actually uses is
+   emitted. */
+@source "../src";
+
+/* Tailwind only emits utilities it can see in scanned content. A design agent
+   composing new screens writes classes that appear nowhere in this repo, so
+   safelist the common utility families — without this, agent-authored layout
+   silently renders unstyled. Invalid combinations in these patterns simply
+   produce no CSS. */
+@source inline("{flex,inline-flex,grid,inline-grid,block,inline-block,hidden,contents,table}");
+@source inline("{flex-row,flex-row-reverse,flex-col,flex-col-reverse,flex-wrap,flex-nowrap}");
+@source inline("{flex-1,flex-auto,flex-initial,flex-none,shrink,shrink-0,grow,grow-0}");
+@source inline("grid-cols-{1,2,3,4,5,6,12}");
+@source inline("col-span-{1,2,3,4,5,6,full}");
+@source inline("{items,self}-{start,end,center,stretch,baseline}");
+@source inline("{justify,content}-{start,end,center,between,around,evenly,stretch}");
+@source inline("{p,px,py,pt,pr,pb,pl,m,mx,my,mt,mr,mb,ml}-{0,0.5,1,1.5,2,2.5,3,4,5,6,8,10,12,16,20,24}");
+@source inline("{mx,my}-auto");
+@source inline("{gap,gap-x,gap-y,space-x,space-y}-{0,1,2,3,4,5,6,8,10,12,16}");
+@source inline("{w,h,min-w,min-h,max-w,max-h}-{0,4,8,12,16,24,32,48,64,full,screen,auto,fit,min,max}");
+@source inline("max-w-{xs,sm,md,lg,xl,2xl,3xl,4xl,5xl,prose,none}");
+@source inline("text-{xs,sm,base,lg,xl,2xl,3xl,4xl,5xl,6xl}");
+@source inline("{font-thin,font-light,font-normal,font-medium,font-semibold,font-bold,font-extrabold}");
+@source inline("{italic,not-italic,underline,line-through,no-underline,uppercase,lowercase,capitalize,normal-case,truncate}");
+@source inline("text-{left,center,right,justify}");
+@source inline("leading-{none,tight,snug,normal,relaxed,loose}");
+@source inline("tracking-{tighter,tight,normal,wide,wider,widest}");
+@source inline("{static,relative,absolute,fixed,sticky}");
+@source inline("{top,right,bottom,left,inset}-{0,auto,full}");
+@source inline("z-{0,10,20,30,40,50,auto}");
+@source inline("{overflow,overflow-x,overflow-y}-{auto,hidden,visible,scroll}");
+@source inline("rounded{,-none,-sm,-md,-lg,-xl,-2xl,-3xl,-full}");
+@source inline("border{,-0,-2,-4,-t,-r,-b,-l}");
+@source inline("shadow{,-none,-sm,-md,-lg,-xl,-2xl}");
+@source inline("{bg,text,border}-{white,black,transparent,current}");
+@source inline("{bg,text,border}-{slate,gray,zinc,neutral,stone}-{50,100,200,300,400,500,600,700,800,900}");
+@source inline("opacity-{0,25,50,75,100}");
+@source inline("{cursor-pointer,cursor-default,select-none,pointer-events-none,transition,duration-150,duration-300}");
+@source inline("{sm,md,lg}:{flex,grid,hidden,block,flex-row,flex-col,text-center,text-left}");
+@source inline("{hover,focus}:{underline,no-underline,opacity-75}");
+
+/* The --font-* custom properties. Astro's Fonts API normally defines these at
+   runtime from the `fonts:` array in astro.config.ts; nothing in the repo's CSS
+   declares them, so global.css's var(--font-atkinson) etc. would resolve to
+   nothing in a standalone bundle. Values mirror each entry's `name` and
+   `fallbacks` in astro.config.ts, and match the families declared in
+   .design-sync/fonts.css. */
+:root {
+  --font-atkinson: "Atkinson";
+  --font-cascadia-code: "Cascadia Code", monospace;
+  --font-jetbrains-mono: "JetBrains Mono", monospace;
+  --font-syne: "Syne";
+  --font-tangerine: "Tangerine";
+  --font-liberation-serif: "Liberation Serif";
+}

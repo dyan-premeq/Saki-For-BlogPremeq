@@ -16,9 +16,16 @@ interface Props {
 
 const { title, description, image, bodyClass } = Astro.props;
 
+// Remote CJK brand faces, sliced by unicode-range so the browser only fetches
+// the blocks a page actually uses.
+//   24  LXGW Heart Serif  — --font-display-cjk
+//   292 LXGW WenKai       — --font-prose-cjk
+//   802 YShi-Written      — --font-quote-cjk (was loaded only by
+//       ProsePageLayout, so pull-quotes fell back to KaiTi everywhere else)
 const zeoSevenFontLinks = [
   "https://fontsapi.zeoseven.com/24/main/result.css",
   "https://fontsapi.zeoseven.com/292/main/result.css",
+  "https://fontsapi.zeoseven.com/802/main/result.css",
 ]
   .map(
     (href) =>
